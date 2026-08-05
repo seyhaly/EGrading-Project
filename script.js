@@ -903,6 +903,13 @@ document.addEventListener('DOMContentLoaded', () => {
             </tr>
         </thead><tbody>`;
 
+        // Content Header Row
+        html += `<tr style="background-color: #f1f5f9; border-top: 1px solid #cbd5e1; border-bottom: 1px solid #cbd5e1;">
+            <td colspan="3" style="padding: 6px 8px; font-weight: bold; font-size: 11px; text-transform: uppercase; color: #1d8a7e; letter-spacing: 0.05em;">
+                📁 ${currentRubric.contentTitle} (${currentRubric.contentWeightPct}%)
+            </td>
+        </tr>`;
+
         // Content Rows
         allContent.forEach((crit, index) => {
             const selected = document.querySelector(`input[name="crit${crit.id}"]:checked`);
@@ -915,13 +922,19 @@ document.addEventListener('DOMContentLoaded', () => {
             html += `</tr>`;
         });
 
+        // Grammar Header Row
+        html += `<tr style="background-color: #f1f5f9; border-top: 2px solid #94a3b8; border-bottom: 1px solid #cbd5e1;">
+            <td colspan="3" style="padding: 6px 8px; font-weight: bold; font-size: 11px; text-transform: uppercase; color: #7057a4; letter-spacing: 0.05em;">
+                📝 ${currentRubric.grammarTitle} (${currentRubric.grammarWeightPct}%)
+            </td>
+        </tr>`;
+
         // Grammar Rows
         allGrammar.forEach((crit, index) => {
             const selected = document.querySelector(`input[name="crit${crit.id}"]:checked`);
             const scoreVal = selected ? `${selected.value}/${crit.max}` : `0/${crit.max}`;
-            const rowStyle = index === 0 ? 'border-top: 2px solid #94a3b8; border-bottom: 1px solid #e2e8f0;' : 'border-bottom: 1px solid #e2e8f0;';
 
-            html += `<tr style="${rowStyle}">`;
+            html += `<tr style="border-bottom: 1px solid #e2e8f0;">`;
             html += `<td style="padding: 5px 8px; text-align: center; font-weight: bold; color: #7057a4;">${crit.id}</td>`;
             html += `<td style="padding: 5px 8px;">${crit.name}:</td>`;
             html += `<td style="padding: 5px 8px; text-align: right; font-family: monospace; font-weight: bold;">${scoreVal}</td>`;
@@ -948,10 +961,14 @@ document.addEventListener('DOMContentLoaded', () => {
         plainText += `${currentRubric.contentTitle} (${currentRubric.contentWeightPct}%): ${contentWeighted.toFixed(2)}/${currentRubric.contentPoints.toFixed(1)}\n`;
         plainText += `${currentRubric.grammarTitle} (${currentRubric.grammarWeightPct}%): ${grammarWeighted.toFixed(2)}/${currentRubric.grammarPoints.toFixed(1)}\n`;
         plainText += `TOTAL SCORE: ${totalScore.toFixed(2)} / ${currentRubric.totalExamPoints || 30}.00\n\n`;
+        
+        plainText += `--- ${currentRubric.contentTitle.toUpperCase()} (${currentRubric.contentWeightPct}%) ---\n`;
         allContent.forEach(c => {
             const sel = document.querySelector(`input[name="crit${c.id}"]:checked`);
             plainText += `[${c.id}] ${c.name}: ${sel ? sel.value : 0}/${c.max}\n`;
         });
+
+        plainText += `\n--- ${currentRubric.grammarTitle.toUpperCase()} (${currentRubric.grammarWeightPct}%) ---\n`;
         allGrammar.forEach(c => {
             const sel = document.querySelector(`input[name="crit${c.id}"]:checked`);
             plainText += `[${c.id}] ${c.name}: ${sel ? sel.value : 0}/${c.max}\n`;
