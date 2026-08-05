@@ -469,14 +469,19 @@ document.addEventListener('DOMContentLoaded', () => {
         syncRubricsToCloud();
     });
 
-    restoreDefaultBtn.addEventListener('click', () => {
+    const restoreDefaultMainBtn = document.getElementById('restore-default-main-btn');
+
+    function performRestoreDefaults() {
         if (confirm("Are you sure you want to restore original default rubrics? This will reset custom edits.")) {
             RUBRICS = JSON.parse(JSON.stringify(INITIAL_DEFAULT_RUBRICS));
             saveRubricsToLocalStorage();
             syncRubricsToCloud();
-            showToastAlert('🔄 Restored default rubrics.', 'info');
+            showToastAlert('🔄 Restored original default rubrics globally!', 'info');
         }
-    });
+    }
+
+    if (restoreDefaultBtn) restoreDefaultBtn.addEventListener('click', performRestoreDefaults);
+    if (restoreDefaultMainBtn) restoreDefaultMainBtn.addEventListener('click', performRestoreDefaults);
     themeToggleBtn.addEventListener('click', () => {
         const newTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
         document.documentElement.setAttribute('data-theme', newTheme);
