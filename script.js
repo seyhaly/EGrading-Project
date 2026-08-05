@@ -4,6 +4,9 @@ document.addEventListener('DOMContentLoaded', () => {
         "A1": {
             id: "A1",
             themeClass: "level-a1",
+            totalExamPoints: 30,
+            contentTitle: "Content and Paragraph Structure",
+            grammarTitle: "Grammar for writing",
             contentPoints: 18,
             grammarPoints: 12,
             contentWeightPct: 60,
@@ -26,6 +29,9 @@ document.addEventListener('DOMContentLoaded', () => {
         "A2": {
             id: "A2",
             themeClass: "level-a2",
+            totalExamPoints: 30,
+            contentTitle: "Content and Paragraph Structure",
+            grammarTitle: "Grammar for writing",
             contentPoints: 18,
             grammarPoints: 12,
             contentWeightPct: 60,
@@ -48,6 +54,9 @@ document.addEventListener('DOMContentLoaded', () => {
         "B1": {
             id: "B1",
             themeClass: "level-b1",
+            totalExamPoints: 30,
+            contentTitle: "Content and Paragraph Structure",
+            grammarTitle: "Grammar for writing",
             contentPoints: 15,
             grammarPoints: 15,
             contentWeightPct: 50,
@@ -87,9 +96,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const editModeToggleBtn = document.getElementById('edit-mode-toggle');
     const editToggleLabel = document.getElementById('edit-toggle-label');
     const editToolbar = document.getElementById('edit-toolbar');
-    const addCriterionBtn = document.getElementById('add-criterion-btn');
     const saveSyncBtn = document.getElementById('save-sync-btn');
     const restoreDefaultBtn = document.getElementById('restore-default-btn');
+    const editExamTotalPointsInput = document.getElementById('edit-exam-total-points');
+
+    // Section Specific Add Buttons & Headers
+    const contentHeaderTitleContainer = document.getElementById('content-header-title-container');
+    const grammarHeaderTitleContainer = document.getElementById('grammar-header-title-container');
+    const contentHeaderWeightContainer = document.getElementById('content-header-weight-container');
+    const grammarHeaderWeightContainer = document.getElementById('grammar-header-weight-container');
+    const contentAddWrapper = document.getElementById('content-add-wrapper');
+    const grammarAddWrapper = document.getElementById('grammar-add-wrapper');
+    const addContentCritBtn = document.getElementById('add-content-crit-btn');
+    const addGrammarCritBtn = document.getElementById('add-grammar-crit-btn');
 
     // 3. State Variables
     let currentRubric = null;
@@ -210,9 +229,39 @@ document.addEventListener('DOMContentLoaded', () => {
     function saveEditModeInputsToData() {
         if (!currentRubric || !isEditMode) return;
         
+        // Save Overall Exam Total Points
+        const totalInput = document.getElementById('edit-exam-total-points');
+        if (totalInput) {
+            currentRubric.totalExamPoints = Math.max(1, parseInt(totalInput.value) || 30);
+        }
+
+        // Save Category Titles
+        const contentTitleInput = document.getElementById('edit-content-title-input');
+        if (contentTitleInput) {
+            currentRubric.contentTitle = contentTitleInput.value.trim() || "Content and Paragraph Structure";
+        }
+        const grammarTitleInput = document.getElementById('edit-grammar-title-input');
+        if (grammarTitleInput) {
+            currentRubric.grammarTitle = grammarTitleInput.value.trim() || "Grammar for writing";
+        }
+
+        // Save Weight Percentages
+        const contentWeightInput = document.getElementById('edit-content-weight-input');
+        const grammarWeightInput = document.getElementById('edit-grammar-weight-input');
+        if (contentWeightInput && grammarWeightInput) {
+            const cPct = Math.min(100, Math.max(0, parseInt(contentWeightInput.value) || 50));
+            currentRubric.contentWeightPct = cPct;
+            currentRubric.grammarWeightPct = 100 - cPct;
+        }
+
+        // Calculate Section Points based on Weight % of Overall Exam Score
+        const totalPts = currentRubric.totalExamPoints || 30;
+        currentRubric.contentPoints = (currentRubric.contentWeightPct / 100) * totalPts;
+        currentRubric.grammarPoints = (currentRubric.grammarWeightPct / 100) * totalPts;
+
         // Save Content Criteria
         const contentRows = contentCritList.querySelectorAll('.edit-crit-row');
-        contentRows.forEach((row, idx) => {
+        contentRows.forEach((row) => {
             const id = parseInt(row.dataset.id);
             const nameInput = row.querySelector('.edit-crit-name');
             const maxSelect = row.querySelector('.edit-crit-max');
@@ -225,7 +274,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Save Grammar Criteria
         const grammarRows = grammarCritList.querySelectorAll('.edit-crit-row');
-        grammarRows.forEach((row, idx) => {
+        grammarRows.forEach((row) => {
             const id = parseInt(row.dataset.id);
             const nameInput = row.querySelector('.edit-crit-name');
             const maxSelect = row.querySelector('.edit-crit-max');
@@ -336,12 +385,13 @@ document.addEventListener('DOMContentLoaded', () => {
         contentSum = processGroup(currentRubric.content);
         grammarSum = processGroup(currentRubric.grammar);
 
+        const totalExamPts = currentRubric.totalExamPoints || 30;
         const contentWeighted = contentMaxSum > 0 ? (contentSum / contentMaxSum) * currentRubric.contentPoints : 0;
         const grammarWeighted = grammarMaxSum > 0 ? (grammarSum / grammarMaxSum) * currentRubric.grammarPoints : 0;
         const totalScore = contentWeighted + grammarWeighted;
 
-        document.getElementById('total-content').textContent = contentWeighted.toFixed(2) + `/${currentRubric.contentPoints}`;
-        document.getElementById('total-grammar').textContent = grammarWeighted.toFixed(2) + `/${currentRubric.grammarPoints}`;
+        document.getElementById('total-content').textContent = contentWeighted.toFixed(2) + `/${currentRubric.contentPoints.toFixed(1)}`;
+        document.getElementById('total-grammar').textContent = grammarWeighted.toFixed(2) + `/${currentRubric.grammarPoints.toFixed(1)}`;
         document.getElementById('total-score').textContent = totalScore.toFixed(2);
         
         const floatingScore = document.getElementById('top-total-score');
@@ -352,15 +402,65 @@ document.addEventListener('DOMContentLoaded', () => {
         currentRubric = RUBRICS[levelId];
         if (!currentRubric) return;
 
-        // Toggle Edit Toolbar UI
+        // Ensure defaults if missing
+        if (!currentRubric.totalExamPoints) currentRubric.totalExamPoints = 30;
+        if (!currentRubric.contentTitle) currentRubric.contentTitle = "Content and Paragraph Structure";
+        if (!currentRubric.grammarTitle) currentRubric.grammarTitle = "Grammar for writing";
+        if (currentRubric.contentPoints === undefined) currentRubric.contentPoints = (currentRubric.contentWeightPct / 100) * currentRubric.totalExamPoints;
+        if (currentRubric.grammarPoints === undefined) currentRubric.grammarPoints = (currentRubric.grammarWeightPct / 100) * currentRubric.totalExamPoints;
+
+        if (editExamTotalPointsInput) editExamTotalPointsInput.value = currentRubric.totalExamPoints;
+
+        // Toggle Edit Toolbar UI & Category Wrappers
         if (isEditMode) {
             editToolbar.style.display = 'flex';
             editToggleLabel.textContent = '👁️ Grading Mode';
             editModeToggleBtn.classList.add('active-edit-btn');
+
+            contentAddWrapper.style.display = 'block';
+            grammarAddWrapper.style.display = 'block';
+
+            // Editable Category Headers
+            contentHeaderTitleContainer.innerHTML = `<input type="text" id="edit-content-title-input" class="edit-input" value="${currentRubric.contentTitle}" style="width: 100%; padding: 0.4rem 0.65rem; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-main); font-weight: 700; font-size: 1.1rem;">`;
+            grammarHeaderTitleContainer.innerHTML = `<input type="text" id="edit-grammar-title-input" class="edit-input" value="${currentRubric.grammarTitle}" style="width: 100%; padding: 0.4rem 0.65rem; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-main); font-weight: 700; font-size: 1.1rem;">`;
+
+            contentHeaderWeightContainer.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 0.3rem; background: var(--bg-card); padding: 0.35rem 0.65rem; border-radius: 8px; border: 1px solid var(--border); font-size: 0.85rem; font-weight: 700; color: var(--text-main);">
+                    <span>Weight:</span>
+                    <input type="number" id="edit-content-weight-input" value="${currentRubric.contentWeightPct}" min="0" max="100" style="width: 55px; padding: 0.25rem 0.4rem; border-radius: 6px; border: 1px solid var(--border); background: var(--bg-main); color: var(--text-main); font-weight: bold; text-align: center;">%
+                </div>`;
+            grammarHeaderWeightContainer.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 0.3rem; background: var(--bg-card); padding: 0.35rem 0.65rem; border-radius: 8px; border: 1px solid var(--border); font-size: 0.85rem; font-weight: 700; color: var(--text-main);">
+                    <span>Weight:</span>
+                    <input type="number" id="edit-grammar-weight-input" value="${currentRubric.grammarWeightPct}" min="0" max="100" style="width: 55px; padding: 0.25rem 0.4rem; border-radius: 6px; border: 1px solid var(--border); background: var(--bg-main); color: var(--text-main); font-weight: bold; text-align: center;">%
+                </div>`;
+
+            // Live listener for weights & overall score
+            const cWeightInput = document.getElementById('edit-content-weight-input');
+            const gWeightInput = document.getElementById('edit-grammar-weight-input');
+            if (cWeightInput && gWeightInput) {
+                cWeightInput.addEventListener('input', (e) => {
+                    const val = Math.min(100, Math.max(0, parseInt(e.target.value) || 0));
+                    gWeightInput.value = 100 - val;
+                });
+                gWeightInput.addEventListener('input', (e) => {
+                    const val = Math.min(100, Math.max(0, parseInt(e.target.value) || 0));
+                    cWeightInput.value = 100 - val;
+                });
+            }
         } else {
             editToolbar.style.display = 'none';
             editToggleLabel.textContent = 'Edit Mode';
             editModeToggleBtn.classList.remove('active-edit-btn');
+
+            contentAddWrapper.style.display = 'none';
+            grammarAddWrapper.style.display = 'none';
+
+            contentHeaderTitleContainer.innerHTML = `<h2 id="content-cat-title">${currentRubric.contentTitle}</h2><p>Assessing ideas, organization, and flow</p>`;
+            grammarHeaderTitleContainer.innerHTML = `<h2 id="grammar-cat-title">${currentRubric.grammarTitle}</h2><p>Assessing syntax, punctuation, and mechanics</p>`;
+
+            contentHeaderWeightContainer.innerHTML = `<div class="weight-badge" id="content-weight-badge">${currentRubric.contentWeightPct}% Weight (${currentRubric.contentPoints.toFixed(1)} pts)</div>`;
+            grammarHeaderWeightContainer.innerHTML = `<div class="weight-badge" id="grammar-weight-badge">${currentRubric.grammarWeightPct}% Weight (${currentRubric.grammarPoints.toFixed(1)} pts)</div>`;
         }
 
         // Render Criteria Lists
@@ -385,14 +485,14 @@ document.addEventListener('DOMContentLoaded', () => {
         // Summary Table
         summaryTbody.innerHTML = '';
         const groups = [
-            { items: currentRubric.content, weight: currentRubric.contentWeightPct, label: 'Content' },
-            { items: currentRubric.grammar, weight: currentRubric.grammarWeightPct, label: 'Grammar' }
+            { items: currentRubric.content, weight: currentRubric.contentWeightPct, label: currentRubric.contentTitle },
+            { items: currentRubric.grammar, weight: currentRubric.grammarWeightPct, label: currentRubric.grammarTitle }
         ];
 
         groups.forEach(group => {
             group.items.forEach((crit, index) => {
                 const tr = document.createElement('tr');
-                if (group.label === 'Grammar' && index === 0) tr.className = 'section-divider';
+                if (group.label === currentRubric.grammarTitle && index === 0) tr.className = 'section-divider';
                 if (index === 0) {
                     const tdCat = document.createElement('td');
                     tdCat.rowSpan = group.items.length;
@@ -410,10 +510,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         levelSelect.className = `badge level-select ${currentRubric.themeClass}`;
-        document.getElementById('content-weight-badge').textContent = `${currentRubric.contentWeightPct}% Weight (${currentRubric.contentPoints} pts)`;
-        document.getElementById('grammar-weight-badge').textContent = `${currentRubric.grammarWeightPct}% Weight (${currentRubric.grammarPoints} pts)`;
-        document.getElementById('summary-content-label').textContent = `Content and Paragraph Structure (${currentRubric.contentWeightPct}%)`;
-        document.getElementById('summary-grammar-label').textContent = `Grammar for writing (${currentRubric.grammarWeightPct}%)`;
+        document.getElementById('summary-content-label').textContent = `${currentRubric.contentTitle} (${currentRubric.contentWeightPct}%)`;
+        document.getElementById('summary-grammar-label').textContent = `${currentRubric.grammarTitle} (${currentRubric.grammarWeightPct}%)`;
+        
+        const grandTotalLabel = document.querySelector('.grand-total .total-label');
+        if (grandTotalLabel) grandTotalLabel.textContent = `Total Score/${currentRubric.totalExamPoints || 30}`;
 
         if (!isEditMode) {
             const radioInputs = document.querySelectorAll('input[type="radio"]');
@@ -440,29 +541,27 @@ document.addEventListener('DOMContentLoaded', () => {
         renderRubric(levelSelect.value);
     });
 
-    addCriterionBtn.addEventListener('click', () => {
+    addContentCritBtn.addEventListener('click', () => {
+        if (!currentRubric) return;
+        const allIds = [...currentRubric.content, ...currentRubric.grammar].map(c => c.id);
+        const nextId = allIds.length > 0 ? Math.max(...allIds) + 1 : 1;
+        const newCrit = { id: nextId, name: "New Content Criterion", max: 3, colorClass: 'special-green', textClass: '' };
+        currentRubric.content.push(newCrit);
+        renderRubric(currentRubric.id);
+        showToastAlert('➕ Added new criterion to Content section!', 'info');
+    });
+
+    addGrammarCritBtn.addEventListener('click', () => {
         if (!currentRubric) return;
         const allIds = [...currentRubric.content, ...currentRubric.grammar].map(c => c.id);
         const nextId = allIds.length > 0 ? Math.max(...allIds) + 1 : 1;
         const colorClasses = ['bg-purple', 'bg-pink', 'bg-orange', 'bg-cyan', 'bg-emerald'];
         const textClasses = ['text-purple', 'text-pink', 'text-orange', 'text-cyan', 'text-emerald'];
         const rndIdx = Math.floor(Math.random() * colorClasses.length);
-
-        const newCrit = {
-            id: nextId,
-            name: "New Assessment Criterion",
-            max: 3,
-            colorClass: colorClasses[rndIdx],
-            textClass: textClasses[rndIdx]
-        };
-
-        if (nextId <= 5) {
-            currentRubric.content.push(newCrit);
-        } else {
-            currentRubric.grammar.push(newCrit);
-        }
+        const newCrit = { id: nextId, name: "New Grammar Criterion", max: 4, colorClass: colorClasses[rndIdx], textClass: textClasses[rndIdx] };
+        currentRubric.grammar.push(newCrit);
         renderRubric(currentRubric.id);
-        showToastAlert('➕ Added new criterion item! Click Save & Sync to publish.', 'info');
+        showToastAlert('➕ Added new criterion to Grammar section!', 'info');
     });
 
     saveSyncBtn.addEventListener('click', () => {
@@ -613,24 +712,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
         html += `</tbody><tfoot>`;
         html += `<tr style="border-top: 2px solid #475569;">
-            <td colspan="2" style="padding: 5px 8px; font-weight: bold; text-align: right;">Content & Paragraph Structure (${currentRubric.contentWeightPct}%)</td>
-            <td style="padding: 5px 8px; text-align: right; font-weight: bold; color: #3874CB;">${contentWeighted.toFixed(2)}/${currentRubric.contentPoints}</td>
+            <td colspan="2" style="padding: 5px 8px; font-weight: bold; text-align: right;">${currentRubric.contentTitle} (${currentRubric.contentWeightPct}%)</td>
+            <td style="padding: 5px 8px; text-align: right; font-weight: bold; color: #3874CB;">${contentWeighted.toFixed(2)}/${currentRubric.contentPoints.toFixed(1)}</td>
         </tr>`;
         html += `<tr>
-            <td colspan="2" style="padding: 5px 8px; font-weight: bold; text-align: right;">Grammar for Writing (${currentRubric.grammarWeightPct}%)</td>
-            <td style="padding: 5px 8px; text-align: right; font-weight: bold; color: #3874CB;">${grammarWeighted.toFixed(2)}/${currentRubric.grammarPoints}</td>
+            <td colspan="2" style="padding: 5px 8px; font-weight: bold; text-align: right;">${currentRubric.grammarTitle} (${currentRubric.grammarWeightPct}%)</td>
+            <td style="padding: 5px 8px; text-align: right; font-weight: bold; color: #3874CB;">${grammarWeighted.toFixed(2)}/${currentRubric.grammarPoints.toFixed(1)}</td>
         </tr>`;
         html += `<tr style="border-top: 2px solid #0f172a; background-color: #f1f5f9;">
-            <td colspan="2" style="padding: 6px 8px; font-size: 13px; font-weight: bold; text-align: right;">Total Score / 30</td>
+            <td colspan="2" style="padding: 6px 8px; font-size: 13px; font-weight: bold; text-align: right;">Total Score / ${currentRubric.totalExamPoints || 30}</td>
             <td style="padding: 6px 8px; font-size: 13px; font-weight: bold; text-align: right; color: #3874CB;">${totalScore.toFixed(2)}</td>
         </tr>`;
         html += `</tfoot></table></div>`;
 
         // Text fallback
         let plainText = `SCORE RECEIPT\n`;
-        plainText += `Content (${currentRubric.contentWeightPct}%): ${contentWeighted.toFixed(2)}/${currentRubric.contentPoints}\n`;
-        plainText += `Grammar (${currentRubric.grammarWeightPct}%): ${grammarWeighted.toFixed(2)}/${currentRubric.grammarPoints}\n`;
-        plainText += `TOTAL SCORE: ${totalScore.toFixed(2)} / 30.00\n\n`;
+        plainText += `${currentRubric.contentTitle} (${currentRubric.contentWeightPct}%): ${contentWeighted.toFixed(2)}/${currentRubric.contentPoints.toFixed(1)}\n`;
+        plainText += `${currentRubric.grammarTitle} (${currentRubric.grammarWeightPct}%): ${grammarWeighted.toFixed(2)}/${currentRubric.grammarPoints.toFixed(1)}\n`;
+        plainText += `TOTAL SCORE: ${totalScore.toFixed(2)} / ${currentRubric.totalExamPoints || 30}.00\n\n`;
         allContent.forEach(c => {
             const sel = document.querySelector(`input[name="crit${c.id}"]:checked`);
             plainText += `[${c.id}] ${c.name}: ${sel ? sel.value : 0}/${c.max}\n`;
