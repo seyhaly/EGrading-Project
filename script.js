@@ -327,15 +327,13 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
         if (rubric.grammar) {
-            rubric.grammar.forEach(crit => {
+            const colorClasses = ['bg-purple', 'bg-pink', 'bg-orange', 'bg-cyan', 'bg-emerald'];
+            const textClasses = ['text-purple', 'text-pink', 'text-orange', 'text-cyan', 'text-emerald'];
+            rubric.grammar.forEach((crit, idx) => {
                 crit.id = counter++;
-                if (!crit.colorClass) {
-                    const colorClasses = ['bg-purple', 'bg-pink', 'bg-orange', 'bg-cyan', 'bg-emerald'];
-                    const textClasses = ['text-purple', 'text-pink', 'text-orange', 'text-cyan', 'text-emerald'];
-                    const idx = (crit.id - 1) % colorClasses.length;
-                    crit.colorClass = colorClasses[idx];
-                    crit.textClass = textClasses[idx];
-                }
+                const colorIdx = idx % colorClasses.length;
+                crit.colorClass = colorClasses[colorIdx];
+                crit.textClass = textClasses[colorIdx];
             });
         }
     }
@@ -706,10 +704,7 @@ document.addEventListener('DOMContentLoaded', () => {
     addGrammarCritBtn.addEventListener('click', () => {
         if (!currentRubric) return;
         saveEditModeInputsToData();
-        const colorClasses = ['bg-purple', 'bg-pink', 'bg-orange', 'bg-cyan', 'bg-emerald'];
-        const textClasses = ['text-purple', 'text-pink', 'text-orange', 'text-cyan', 'text-emerald'];
-        const rndIdx = Math.floor(Math.random() * colorClasses.length);
-        const newCrit = { id: 0, name: "New Grammar Criterion", max: 4, colorClass: colorClasses[rndIdx], textClass: textClasses[rndIdx] };
+        const newCrit = { id: 0, name: "New Grammar Criterion", max: 4 };
         currentRubric.grammar.push(newCrit);
         reindexCriteria(currentRubric);
         renderRubric(currentRubric.id);
