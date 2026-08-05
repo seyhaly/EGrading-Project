@@ -606,8 +606,8 @@ document.addEventListener('DOMContentLoaded', () => {
             contentAddWrapper.style.display = 'none';
             grammarAddWrapper.style.display = 'none';
 
-            contentHeaderTitleContainer.innerHTML = `<h2 id="content-cat-title">${currentRubric.contentTitle}</h2><p>Assessing ideas, organization, and flow</p>`;
-            grammarHeaderTitleContainer.innerHTML = `<h2 id="grammar-cat-title">${currentRubric.grammarTitle}</h2><p>Assessing syntax, punctuation, and mechanics</p>`;
+            contentHeaderTitleContainer.innerHTML = `<h2 id="content-cat-title">${currentRubric.contentTitle}</h2>`;
+            grammarHeaderTitleContainer.innerHTML = `<h2 id="grammar-cat-title">${currentRubric.grammarTitle}</h2>`;
 
             contentHeaderWeightContainer.innerHTML = `<div class="weight-badge" id="content-weight-badge">${currentRubric.contentWeightPct}% Weight (${currentRubric.contentPoints.toFixed(1)} pts)</div>`;
             grammarHeaderWeightContainer.innerHTML = `<div class="weight-badge" id="grammar-weight-badge">${currentRubric.grammarWeightPct}% Weight (${currentRubric.grammarPoints.toFixed(1)} pts)</div>`;
