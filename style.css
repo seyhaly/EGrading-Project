@@ -1069,9 +1069,9 @@ select.level-ceb2 {
 }
 
 .edit-toggle-btn.active-edit-btn {
-    background: #D97706 !important;
+    background: var(--primary) !important;
     color: #FFFFFF !important;
-    box-shadow: 0 4px 15px rgba(217, 119, 6, 0.4);
+    box-shadow: 0 4px 15px var(--primary-glow);
 }
 
 .edit-crit-name:focus,
