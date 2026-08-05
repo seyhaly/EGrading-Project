@@ -252,13 +252,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function fetchCloudRubrics() {
         try {
-            const res = await fetch(CLOUD_SYNC_URL);
+            const res = await fetch(CLOUD_SYNC_URL + '?t=' + Date.now(), { cache: 'no-store' });
             if (res.ok) {
                 const data = await res.json();
-                if (data && data.RUBRICS && Object.keys(data.RUBRICS).length > 0) {
+                if (data && data.RUBRICS && typeof data.RUBRICS === 'object' && Object.keys(data.RUBRICS).length > 0) {
                     Object.assign(RUBRICS, data.RUBRICS);
                     saveRubricsToLocalStorage();
-                    if (currentRubric) renderRubric(currentRubric.id);
+                    if (currentRubric && RUBRICS[currentRubric.id]) {
+                        renderRubric(currentRubric.id);
+                    }
                 }
             }
         } catch (e) {
