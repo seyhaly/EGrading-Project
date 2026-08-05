@@ -720,10 +720,66 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const restoreDefaultMainBtn = document.getElementById('restore-default-main-btn');
 
-    function performRestoreDefaults() {
+    function showCustomConfirmModal(title, message, confirmText = "Confirm", cancelText = "Cancel") {
+        return new Promise((resolve) => {
+            let modalOverlay = document.getElementById('custom-confirm-modal');
+            if (!modalOverlay) {
+                modalOverlay = document.createElement('div');
+                modalOverlay.id = 'custom-confirm-modal';
+                modalOverlay.className = 'custom-modal-overlay';
+                document.body.appendChild(modalOverlay);
+            }
+
+            modalOverlay.innerHTML = `
+                <div class="custom-modal-card">
+                    <div class="custom-modal-header">
+                        <div class="custom-modal-icon">🔄</div>
+                        <h3>${title}</h3>
+                    </div>
+                    <div class="custom-modal-body">
+                        <p>${message}</p>
+                    </div>
+                    <div class="custom-modal-footer">
+                        <button class="btn btn-secondary modal-cancel-btn">${cancelText}</button>
+                        <button class="btn btn-primary modal-confirm-btn" style="background: var(--primary); color: white;">${confirmText}</button>
+                    </div>
+                </div>
+            `;
+
+            requestAnimationFrame(() => {
+                modalOverlay.classList.add('show');
+            });
+
+            const cancelBtn = modalOverlay.querySelector('.modal-cancel-btn');
+            const confirmBtn = modalOverlay.querySelector('.modal-confirm-btn');
+
+            const closeModal = (result) => {
+                modalOverlay.classList.remove('show');
+                setTimeout(() => {
+                    if (modalOverlay.parentNode) modalOverlay.parentNode.removeChild(modalOverlay);
+                }, 300);
+                resolve(result);
+            };
+
+            cancelBtn.onclick = () => closeModal(false);
+            confirmBtn.onclick = () => closeModal(true);
+            modalOverlay.onclick = (e) => {
+                if (e.target === modalOverlay) closeModal(false);
+            };
+        });
+    }
+
+    async function performRestoreDefaults() {
         if (!currentRubric) return;
         const activeLevel = currentRubric.id;
-        if (confirm(`Are you sure you want to restore original default rubric for Level ${activeLevel}? This will reset edits for Level ${activeLevel} only.`)) {
+        const confirmed = await showCustomConfirmModal(
+            "Restore Defaults",
+            `Are you sure you want to restore original default rubric for Level ${activeLevel}? This will reset edits for Level ${activeLevel} only.`,
+            `Restore Level ${activeLevel}`,
+            "Cancel"
+        );
+
+        if (confirmed) {
             if (INITIAL_DEFAULT_RUBRICS[activeLevel]) {
                 RUBRICS[activeLevel] = JSON.parse(JSON.stringify(INITIAL_DEFAULT_RUBRICS[activeLevel]));
                 saveRubricsToLocalStorage();
