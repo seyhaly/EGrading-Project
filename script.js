@@ -1010,9 +1010,16 @@ document.addEventListener('DOMContentLoaded', () => {
     sunIcon.style.display = savedTheme === 'dark' ? 'none' : 'block';
     moonIcon.style.display = savedTheme === 'dark' ? 'block' : 'none';
     
+    // 1) Load saved custom rubrics from local storage first
+    loadRubricsFromLocalStorage();
+
+    // 2) Populate active year and level dropdown and render UI
     const savedYear = localStorage.getItem('selectedYear') || 'FY';
     const savedLevel = localStorage.getItem('selectedLevel');
     populateLevelDropdown(savedYear, savedLevel);
+
+    // 3) Fetch cloud rubrics in background and update UI with team edits
+    fetchCloudRubrics();
 
     // Draggable Score Card
     const floatingCard = document.getElementById('draggable-score');
