@@ -906,7 +906,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Content Header Row
         html += `<tr style="background-color: #f1f5f9; border-top: 1px solid #cbd5e1; border-bottom: 1px solid #cbd5e1;">
             <td colspan="3" style="padding: 6px 8px; font-weight: bold; font-size: 11px; text-transform: uppercase; color: #1d8a7e; letter-spacing: 0.05em;">
-                📁 ${currentRubric.contentTitle} (${currentRubric.contentWeightPct}%)
+                ${currentRubric.contentTitle} (${currentRubric.contentWeightPct}%)
             </td>
         </tr>`;
 
@@ -925,7 +925,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Grammar Header Row
         html += `<tr style="background-color: #f1f5f9; border-top: 2px solid #94a3b8; border-bottom: 1px solid #cbd5e1;">
             <td colspan="3" style="padding: 6px 8px; font-weight: bold; font-size: 11px; text-transform: uppercase; color: #7057a4; letter-spacing: 0.05em;">
-                📝 ${currentRubric.grammarTitle} (${currentRubric.grammarWeightPct}%)
+                ${currentRubric.grammarTitle} (${currentRubric.grammarWeightPct}%)
             </td>
         </tr>`;
 
