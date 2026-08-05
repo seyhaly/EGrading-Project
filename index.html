@@ -40,11 +40,12 @@
         <div class="header-left">
             <p class="subtitle">Assessment Rubric</p>
             <h1 class="title">E-Grading
+                <div class="year-toggle-group" id="year-toggle-group">
+                    <button class="year-toggle-btn active" data-year="FY">FY</button>
+                    <button class="year-toggle-btn" data-year="Y2">Y2</button>
+                </div>
                 <select id="level-select" class="badge level-select">
-                    <option value="A1">Level A1</option>
-                    <option value="A2">Level A2</option>
-                    <option value="B1">Level B1</option>
-                    <option value="B2">Level B2</option>
+                    <!-- Populated dynamically via JS -->
                 </select>
             </h1>
         </div>

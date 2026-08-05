@@ -1,9 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Core Data & Presets
     const INITIAL_DEFAULT_RUBRICS = {
-        "A1": {
-            id: "A1",
-            themeClass: "level-a1",
+        "ECA1": {
+            id: "ECA1",
+            themeClass: "level-eca1",
             totalExamPoints: 30,
             contentTitle: "Content and Paragraph Structure",
             grammarTitle: "Grammar for writing",
@@ -26,9 +26,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 { id: 10, name: "Compound Sentence", max: 4, colorClass: "bg-emerald", textClass: "text-emerald" }
             ]
         },
-        "A2": {
-            id: "A2",
-            themeClass: "level-a2",
+        "ECA2": {
+            id: "ECA2",
+            themeClass: "level-eca2",
             totalExamPoints: 30,
             contentTitle: "Content and Paragraph Structure",
             grammarTitle: "Grammar for writing",
@@ -51,9 +51,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 { id: 10, name: "Compound Sentence", max: 4, colorClass: "bg-emerald", textClass: "text-emerald" }
             ]
         },
-        "B1": {
-            id: "B1",
-            themeClass: "level-b1",
+        "ECB1": {
+            id: "ECB1",
+            themeClass: "level-ecb1",
             totalExamPoints: 30,
             contentTitle: "Content and Paragraph Structure",
             grammarTitle: "Grammar for writing",
@@ -76,9 +76,59 @@ document.addEventListener('DOMContentLoaded', () => {
                 { id: 10, name: "Compound Sentences", max: 4, colorClass: "bg-emerald", textClass: "text-emerald" }
             ]
         },
-        "B2": {
-            id: "B2",
-            themeClass: "level-b2",
+        "CEA2": {
+            id: "CEA2",
+            themeClass: "level-cea2",
+            totalExamPoints: 30,
+            contentTitle: "Content and Paragraph Structure",
+            grammarTitle: "Grammar for writing",
+            contentPoints: 18,
+            grammarPoints: 12,
+            contentWeightPct: 60,
+            grammarWeightPct: 40,
+            content: [
+                { id: 1, name: "Paragraph Formatting", max: 2 },
+                { id: 2, name: "Topic Sentence", max: 3 },
+                { id: 3, name: "Supporting Sentences (Main Idea Sentence)", max: 3 },
+                { id: 4, name: "Supporting Sentences (Explanation)", max: 3 },
+                { id: 5, name: "Concluding sentence", max: 3 }
+            ],
+            grammar: [
+                { id: 6, name: "Punctuation & Capitalization", max: 4, colorClass: "bg-purple", textClass: "text-purple" },
+                { id: 7, name: "Transition Words", max: 4, colorClass: "bg-pink", textClass: "text-pink" },
+                { id: 8, name: "Sentence Fragments", max: 4, colorClass: "bg-orange", textClass: "text-orange" },
+                { id: 9, name: "Subject-Verb Agreement", max: 4, colorClass: "bg-cyan", textClass: "text-cyan" },
+                { id: 10, name: "Compound Sentence", max: 4, colorClass: "bg-emerald", textClass: "text-emerald" }
+            ]
+        },
+        "CEB1": {
+            id: "CEB1",
+            themeClass: "level-ceb1",
+            totalExamPoints: 30,
+            contentTitle: "Content and Paragraph Structure",
+            grammarTitle: "Grammar for writing",
+            contentPoints: 15,
+            grammarPoints: 15,
+            contentWeightPct: 50,
+            grammarWeightPct: 50,
+            content: [
+                { id: 1, name: "Paragraph Formatting", max: 2 },
+                { id: 2, name: "Topic Sentence", max: 3 },
+                { id: 3, name: "Supporting Sentences (Main Idea Sentences)", max: 3 },
+                { id: 4, name: "Supporting Sentences (Explanation)", max: 3 },
+                { id: 5, name: "Concluding sentences", max: 3 }
+            ],
+            grammar: [
+                { id: 6, name: "Punctuation & Capitalization", max: 4, colorClass: "bg-purple", textClass: "text-purple" },
+                { id: 7, name: "Transition Words", max: 4, colorClass: "bg-pink", textClass: "text-pink" },
+                { id: 8, name: "Sentence Fragments", max: 4, colorClass: "bg-orange", textClass: "text-orange" },
+                { id: 9, name: "Subject-Verb Agreement", max: 4, colorClass: "bg-cyan", textClass: "text-cyan" },
+                { id: 10, name: "Compound Sentences", max: 4, colorClass: "bg-emerald", textClass: "text-emerald" }
+            ]
+        },
+        "CEB2": {
+            id: "CEB2",
+            themeClass: "level-ceb2",
             totalExamPoints: 30,
             contentTitle: "Content and Paragraph Structure",
             grammarTitle: "Grammar for writing",
@@ -111,6 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const grammarCritList = document.getElementById('grammar-criteria-list');
     const summaryTbody = document.getElementById('summary-tbody');
     const levelSelect = document.getElementById('level-select');
+    const yearToggleBtns = document.querySelectorAll('.year-toggle-btn');
     const resetBtn = document.getElementById('reset-btn');
     const selectBtn = document.getElementById('select-btn');
     const themeToggleBtn = document.getElementById('theme-toggle');
@@ -135,9 +186,54 @@ document.addEventListener('DOMContentLoaded', () => {
     const addContentCritBtn = document.getElementById('add-content-crit-btn');
     const addGrammarCritBtn = document.getElementById('add-grammar-crit-btn');
 
-    // 3. State Variables
+    // 3. State Variables & Year Config
     let currentRubric = null;
     let isEditMode = false;
+    let currentYear = localStorage.getItem('selectedYear') || 'FY';
+
+    const YEAR_LEVELS = {
+        'FY': [
+            { id: 'ECA1', name: 'Level ECA1' },
+            { id: 'ECA2', name: 'Level ECA2' },
+            { id: 'ECB1', name: 'Level ECB1' }
+        ],
+        'Y2': [
+            { id: 'CEA2', name: 'Level CEA2' },
+            { id: 'CEB1', name: 'Level CEB1' },
+            { id: 'CEB2', name: 'Level CEB2' }
+        ]
+    };
+
+    function populateLevelDropdown(year, preserveLevelId = null) {
+        currentYear = year;
+        localStorage.setItem('selectedYear', year);
+
+        yearToggleBtns.forEach(btn => {
+            if (btn.dataset.year === year) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+
+        levelSelect.innerHTML = '';
+        const options = YEAR_LEVELS[year] || [];
+        options.forEach(opt => {
+            const el = document.createElement('option');
+            el.value = opt.id;
+            el.textContent = opt.name;
+            levelSelect.appendChild(el);
+        });
+
+        let targetLevel = preserveLevelId;
+        if (!options.some(o => o.id === targetLevel)) {
+            targetLevel = options[0].id;
+        }
+
+        levelSelect.value = targetLevel;
+        localStorage.setItem('selectedLevel', targetLevel);
+        renderRubric(targetLevel);
+    }
 
     // 4. Helper & Sync Functions
     function saveRubricsToLocalStorage() {
@@ -357,10 +453,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!currentRubric) return;
         const root = document.documentElement;
         const levelColors = {
-            'A1': '#1D8A7E',
-            'A2': '#3874CB',
-            'B1': '#7057A4',
-            'B2': '#A8324A'
+            'ECA1': '#1D8A7E',
+            'ECA2': '#3874CB',
+            'ECB1': '#7057A4',
+            'CEA2': '#3874CB',
+            'CEB1': '#7057A4',
+            'CEB2': '#A8324A'
         };
         const activeColor = levelColors[currentRubric.id] || '#1D8A7E';
 
@@ -646,6 +744,13 @@ document.addEventListener('DOMContentLoaded', () => {
         moonIcon.style.display = newTheme === 'dark' ? 'block' : 'none';
     });
 
+    yearToggleBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const selectedYear = e.target.dataset.year;
+            populateLevelDropdown(selectedYear);
+        });
+    });
+
     levelSelect.addEventListener('change', (e) => {
         localStorage.setItem('selectedLevel', e.target.value);
         renderRubric(e.target.value);
@@ -832,9 +937,9 @@ document.addEventListener('DOMContentLoaded', () => {
     sunIcon.style.display = savedTheme === 'dark' ? 'none' : 'block';
     moonIcon.style.display = savedTheme === 'dark' ? 'block' : 'none';
     
-    const initialLevel = localStorage.getItem('selectedLevel') || levelSelect.value;
-    levelSelect.value = initialLevel;
-    renderRubric(initialLevel);
+    const savedYear = localStorage.getItem('selectedYear') || 'FY';
+    const savedLevel = localStorage.getItem('selectedLevel');
+    populateLevelDropdown(savedYear, savedLevel);
 
     // Draggable Score Card
     const floatingCard = document.getElementById('draggable-score');

@@ -303,19 +303,62 @@ body {
     transition: background-color 0.3s ease;
 }
 
-select.level-a1 {
+/* Year Toggle Segmented Control */
+.year-toggle-group {
+    display: inline-flex;
+    background: var(--secondary);
+    padding: 0.25rem;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    gap: 0.25rem;
+    align-items: center;
+    vertical-align: middle;
+    margin-left: 0.5rem;
+}
+
+.year-toggle-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    padding: 0.3rem 0.85rem;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.year-toggle-btn:hover {
+    color: var(--text-main);
+}
+
+.year-toggle-btn.active {
+    background: var(--primary);
+    color: white;
+    box-shadow: 0 4px 12px var(--primary-glow);
+}
+
+select.level-eca1 {
     background-color: #1D8A7E !important;
 }
 
-select.level-a2 {
+select.level-eca2 {
     background-color: #3874CB !important;
 }
 
-select.level-b1 {
+select.level-ecb1 {
     background-color: #7057A4 !important;
 }
 
-select.level-b2 {
+select.level-cea2 {
+    background-color: #3874CB !important;
+}
+
+select.level-ceb1 {
+    background-color: #7057A4 !important;
+}
+
+select.level-ceb2 {
     background-color: #A8324A !important;
 }
 
