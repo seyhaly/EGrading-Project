@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Core Data
-    const RUBRICS = {
+    // 1. Core Data & Presets
+    const INITIAL_DEFAULT_RUBRICS = {
         "A1": {
             id: "A1",
             themeClass: "level-a1",
@@ -69,6 +69,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    let RUBRICS = JSON.parse(JSON.stringify(INITIAL_DEFAULT_RUBRICS));
+    const CLOUD_SYNC_URL = 'https://jsonblob.com/api/jsonBlob/019fd040-136f-7c27-9b04-41dfe04820e1';
+
     // 2. DOM Elements
     const contentCritList = document.getElementById('content-criteria-list');
     const grammarCritList = document.getElementById('grammar-criteria-list');
@@ -80,10 +83,71 @@ document.addEventListener('DOMContentLoaded', () => {
     const sunIcon = document.querySelector('.sun-icon');
     const moonIcon = document.querySelector('.moon-icon');
 
+    // Edit Mode Controls
+    const editModeToggleBtn = document.getElementById('edit-mode-toggle');
+    const editToggleLabel = document.getElementById('edit-toggle-label');
+    const editToolbar = document.getElementById('edit-toolbar');
+    const addCriterionBtn = document.getElementById('add-criterion-btn');
+    const saveSyncBtn = document.getElementById('save-sync-btn');
+    const restoreDefaultBtn = document.getElementById('restore-default-btn');
+
     // 3. State Variables
     let currentRubric = null;
+    let isEditMode = false;
 
-    // 4. Helper Functions
+    // 4. Helper & Sync Functions
+    function saveRubricsToLocalStorage() {
+        localStorage.setItem('custom_rubrics_v1', JSON.stringify(RUBRICS));
+    }
+
+    function loadRubricsFromLocalStorage() {
+        const saved = localStorage.getItem('custom_rubrics_v1');
+        if (saved) {
+            try {
+                const parsed = JSON.parse(saved);
+                Object.assign(RUBRICS, parsed);
+            } catch (e) {}
+        }
+    }
+
+    async function fetchCloudRubrics() {
+        try {
+            const res = await fetch(CLOUD_SYNC_URL);
+            if (res.ok) {
+                const data = await res.json();
+                if (data && data.RUBRICS && Object.keys(data.RUBRICS).length > 0) {
+                    Object.assign(RUBRICS, data.RUBRICS);
+                    saveRubricsToLocalStorage();
+                    if (currentRubric) renderRubric(currentRubric.id);
+                }
+            }
+        } catch (e) {
+            console.warn('Cloud sync load fallback:', e);
+        }
+    }
+
+    async function syncRubricsToCloud() {
+        saveEditModeInputsToData();
+        saveRubricsToLocalStorage();
+        showToastAlert('☁️ Syncing changes to cloud...', 'warning');
+        try {
+            const res = await fetch(CLOUD_SYNC_URL, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ RUBRICS })
+            });
+            if (res.ok) {
+                showToastAlert('☁️ Saved & Synced globally for all teachers!', 'success');
+            } else {
+                showToastAlert('💾 Saved locally on your laptop!', 'success');
+            }
+        } catch (e) {
+            showToastAlert('💾 Saved locally! (Cloud sync offline)', 'success');
+        }
+        isEditMode = false;
+        renderRubric(levelSelect.value);
+    }
+
     function hexToRgba(hex, alpha) {
         hex = hex.replace('#', '');
         if (hex.length === 3) hex = hex.split('').map(char => char + char).join('');
@@ -110,6 +174,67 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
         `;
         return row;
+    }
+
+    function createEditCritRow(crit, groupName, colorClass) {
+        const row = document.createElement('div');
+        row.className = `crit-row edit-crit-row row-${colorClass}`;
+        row.dataset.id = crit.id;
+        row.dataset.group = groupName;
+        row.style.cssText = "display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 0.75rem 1rem;";
+
+        row.innerHTML = `
+            <div class="crit-info" style="flex: 1; display: flex; align-items: center; gap: 0.75rem;">
+                <div class="crit-num ${colorClass}">${crit.id}</div>
+                <input type="text" class="edit-crit-name" value="${crit.name}" placeholder="Criterion Name" style="flex: 1; padding: 0.5rem 0.75rem; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-main); font-size: 0.95rem; font-weight: 500;">
+            </div>
+            <div class="edit-crit-controls" style="display: flex; align-items: center; gap: 0.75rem;">
+                <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted); display: flex; align-items: center; gap: 0.3rem;">Max:
+                    <select class="edit-crit-max" style="padding: 0.35rem 0.5rem; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-main); color: var(--text-main); font-weight: bold;">
+                        ${[1,2,3,4,5,10].map(m => `<option value="${m}" ${crit.max === m ? 'selected' : ''}>${m}</option>`).join('')}
+                    </select>
+                </label>
+                <button class="delete-crit-btn btn btn-secondary" style="padding: 0.35rem 0.6rem; border-radius: 8px; color: #EF4444; border-color: rgba(239,68,68,0.3);" title="Delete criterion">🗑️</button>
+            </div>
+        `;
+
+        const deleteBtn = row.querySelector('.delete-crit-btn');
+        deleteBtn.addEventListener('click', () => {
+            currentRubric[groupName] = currentRubric[groupName].filter(c => c.id !== crit.id);
+            renderRubric(currentRubric.id);
+        });
+
+        return row;
+    }
+
+    function saveEditModeInputsToData() {
+        if (!currentRubric || !isEditMode) return;
+        
+        // Save Content Criteria
+        const contentRows = contentCritList.querySelectorAll('.edit-crit-row');
+        contentRows.forEach((row, idx) => {
+            const id = parseInt(row.dataset.id);
+            const nameInput = row.querySelector('.edit-crit-name');
+            const maxSelect = row.querySelector('.edit-crit-max');
+            const item = currentRubric.content.find(c => c.id === id);
+            if (item) {
+                item.name = nameInput.value.trim() || item.name;
+                item.max = parseInt(maxSelect.value);
+            }
+        });
+
+        // Save Grammar Criteria
+        const grammarRows = grammarCritList.querySelectorAll('.edit-crit-row');
+        grammarRows.forEach((row, idx) => {
+            const id = parseInt(row.dataset.id);
+            const nameInput = row.querySelector('.edit-crit-name');
+            const maxSelect = row.querySelector('.edit-crit-max');
+            const item = currentRubric.grammar.find(c => c.id === id);
+            if (item) {
+                item.name = nameInput.value.trim() || item.name;
+                item.max = parseInt(maxSelect.value);
+            }
+        });
     }
 
     function showToastAlert(message, type = 'warning') {
@@ -150,7 +275,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function saveScores() {
-        if (!currentRubric) return;
+        if (!currentRubric || isEditMode) return;
         const selections = {};
         const radioInputs = document.querySelectorAll('input[type="radio"]:checked');
         radioInputs.forEach(input => {
@@ -160,7 +285,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function loadScores() {
-        if (!currentRubric) return;
+        if (!currentRubric || isEditMode) return;
         const saved = localStorage.getItem(`scores_${currentRubric.id}`);
         if (!saved) return;
         const selections = JSON.parse(saved);
@@ -190,6 +315,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const selected = document.querySelector(`input[name="crit${crit.id}"]:checked`);
                 const val = selected ? parseInt(selected.value) : null;
                 const outCell = document.getElementById(`score-out-${crit.id}`);
+                if (!outCell) return;
                 if (val !== null) {
                     sum += val;
                     outCell.textContent = `${val}/${crit.max}`;
@@ -226,12 +352,37 @@ document.addEventListener('DOMContentLoaded', () => {
         currentRubric = RUBRICS[levelId];
         if (!currentRubric) return;
 
+        // Toggle Edit Toolbar UI
+        if (isEditMode) {
+            editToolbar.style.display = 'flex';
+            editToggleLabel.textContent = '👁️ Grading Mode';
+            editModeToggleBtn.classList.add('active-edit-btn');
+        } else {
+            editToolbar.style.display = 'none';
+            editToggleLabel.textContent = 'Edit Mode';
+            editModeToggleBtn.classList.remove('active-edit-btn');
+        }
+
+        // Render Criteria Lists
         contentCritList.innerHTML = '';
-        currentRubric.content.forEach(crit => contentCritList.appendChild(createCritRow(crit, 'special-green')));
+        currentRubric.content.forEach(crit => {
+            if (isEditMode) {
+                contentCritList.appendChild(createEditCritRow(crit, 'content', 'special-green'));
+            } else {
+                contentCritList.appendChild(createCritRow(crit, 'special-green'));
+            }
+        });
 
         grammarCritList.innerHTML = '';
-        currentRubric.grammar.forEach(crit => grammarCritList.appendChild(createCritRow(crit, crit.colorClass)));
+        currentRubric.grammar.forEach(crit => {
+            if (isEditMode) {
+                grammarCritList.appendChild(createEditCritRow(crit, 'grammar', crit.colorClass || 'bg-purple'));
+            } else {
+                grammarCritList.appendChild(createCritRow(crit, crit.colorClass || 'bg-purple'));
+            }
+        });
 
+        // Summary Table
         summaryTbody.innerHTML = '';
         const groups = [
             { items: currentRubric.content, weight: currentRubric.contentWeightPct, label: 'Content' },
@@ -264,20 +415,68 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('summary-content-label').textContent = `Content and Paragraph Structure (${currentRubric.contentWeightPct}%)`;
         document.getElementById('summary-grammar-label').textContent = `Grammar for writing (${currentRubric.grammarWeightPct}%)`;
 
-        const radioInputs = document.querySelectorAll('input[type="radio"]');
-        radioInputs.forEach(input => input.addEventListener('change', (e) => {
-            const row = e.target.closest('.crit-row');
-            if (row) row.classList.remove('missing-row-pulse');
-            saveScores();
-            calculateScores();
-        }));
+        if (!isEditMode) {
+            const radioInputs = document.querySelectorAll('input[type="radio"]');
+            radioInputs.forEach(input => input.addEventListener('change', (e) => {
+                const row = e.target.closest('.crit-row');
+                if (row) row.classList.remove('missing-row-pulse');
+                saveScores();
+                calculateScores();
+            }));
 
-        loadScores();
-        calculateScores();
+            loadScores();
+            calculateScores();
+        }
+
         updateActiveLevelTheme();
     }
 
     // 6. Interaction Listeners
+    editModeToggleBtn.addEventListener('click', () => {
+        if (isEditMode) {
+            saveEditModeInputsToData();
+        }
+        isEditMode = !isEditMode;
+        renderRubric(levelSelect.value);
+    });
+
+    addCriterionBtn.addEventListener('click', () => {
+        if (!currentRubric) return;
+        const allIds = [...currentRubric.content, ...currentRubric.grammar].map(c => c.id);
+        const nextId = allIds.length > 0 ? Math.max(...allIds) + 1 : 1;
+        const colorClasses = ['bg-purple', 'bg-pink', 'bg-orange', 'bg-cyan', 'bg-emerald'];
+        const textClasses = ['text-purple', 'text-pink', 'text-orange', 'text-cyan', 'text-emerald'];
+        const rndIdx = Math.floor(Math.random() * colorClasses.length);
+
+        const newCrit = {
+            id: nextId,
+            name: "New Assessment Criterion",
+            max: 3,
+            colorClass: colorClasses[rndIdx],
+            textClass: textClasses[rndIdx]
+        };
+
+        if (nextId <= 5) {
+            currentRubric.content.push(newCrit);
+        } else {
+            currentRubric.grammar.push(newCrit);
+        }
+        renderRubric(currentRubric.id);
+        showToastAlert('➕ Added new criterion item! Click Save & Sync to publish.', 'info');
+    });
+
+    saveSyncBtn.addEventListener('click', () => {
+        syncRubricsToCloud();
+    });
+
+    restoreDefaultBtn.addEventListener('click', () => {
+        if (confirm("Are you sure you want to restore original default rubrics? This will reset custom edits.")) {
+            RUBRICS = JSON.parse(JSON.stringify(INITIAL_DEFAULT_RUBRICS));
+            saveRubricsToLocalStorage();
+            syncRubricsToCloud();
+            showToastAlert('🔄 Restored default rubrics.', 'info');
+        }
+    });
     themeToggleBtn.addEventListener('click', () => {
         const newTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
         document.documentElement.setAttribute('data-theme', newTheme);
