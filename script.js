@@ -564,7 +564,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Toggle Edit Toolbar UI & Category Wrappers
         if (isEditMode) {
             editToolbar.style.display = 'flex';
-            editToggleLabel.textContent = '👁️ Grading Mode';
+            editToggleLabel.textContent = 'Grading Mode';
             editModeToggleBtn.classList.add('active-edit-btn');
 
             contentAddWrapper.style.display = 'block';
