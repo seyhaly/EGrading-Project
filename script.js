@@ -220,6 +220,28 @@ document.addEventListener('DOMContentLoaded', () => {
         return row;
     }
 
+    function reindexCriteria(rubric) {
+        if (!rubric) return;
+        let counter = 1;
+        if (rubric.content) {
+            rubric.content.forEach(crit => {
+                crit.id = counter++;
+            });
+        }
+        if (rubric.grammar) {
+            rubric.grammar.forEach(crit => {
+                crit.id = counter++;
+                if (!crit.colorClass) {
+                    const colorClasses = ['bg-purple', 'bg-pink', 'bg-orange', 'bg-cyan', 'bg-emerald'];
+                    const textClasses = ['text-purple', 'text-pink', 'text-orange', 'text-cyan', 'text-emerald'];
+                    const idx = (crit.id - 1) % colorClasses.length;
+                    crit.colorClass = colorClasses[idx];
+                    crit.textClass = textClasses[idx];
+                }
+            });
+        }
+    }
+
     function createEditCritRow(crit, groupName, colorClass) {
         const row = document.createElement('div');
         row.className = `crit-row edit-crit-row row-${colorClass}`;
@@ -244,7 +266,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const deleteBtn = row.querySelector('.delete-crit-btn');
         deleteBtn.addEventListener('click', () => {
+            saveEditModeInputsToData();
             currentRubric[groupName] = currentRubric[groupName].filter(c => c.id !== crit.id);
+            reindexCriteria(currentRubric);
             renderRubric(currentRubric.id);
         });
 
@@ -428,6 +452,8 @@ document.addEventListener('DOMContentLoaded', () => {
         currentRubric = RUBRICS[levelId];
         if (!currentRubric) return;
 
+        reindexCriteria(currentRubric);
+
         // Ensure defaults if missing
         if (!currentRubric.totalExamPoints) currentRubric.totalExamPoints = 30;
         if (!currentRubric.contentTitle) currentRubric.contentTitle = "Content and Paragraph Structure";
@@ -569,23 +595,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
     addContentCritBtn.addEventListener('click', () => {
         if (!currentRubric) return;
-        const allIds = [...currentRubric.content, ...currentRubric.grammar].map(c => c.id);
-        const nextId = allIds.length > 0 ? Math.max(...allIds) + 1 : 1;
-        const newCrit = { id: nextId, name: "New Content Criterion", max: 3, colorClass: 'special-green', textClass: '' };
+        saveEditModeInputsToData();
+        const newCrit = { id: 0, name: "New Content Criterion", max: 3, colorClass: 'special-green', textClass: '' };
         currentRubric.content.push(newCrit);
+        reindexCriteria(currentRubric);
         renderRubric(currentRubric.id);
         showToastAlert('➕ Added new criterion to Content section!', 'info');
     });
 
     addGrammarCritBtn.addEventListener('click', () => {
         if (!currentRubric) return;
-        const allIds = [...currentRubric.content, ...currentRubric.grammar].map(c => c.id);
-        const nextId = allIds.length > 0 ? Math.max(...allIds) + 1 : 1;
+        saveEditModeInputsToData();
         const colorClasses = ['bg-purple', 'bg-pink', 'bg-orange', 'bg-cyan', 'bg-emerald'];
         const textClasses = ['text-purple', 'text-pink', 'text-orange', 'text-cyan', 'text-emerald'];
         const rndIdx = Math.floor(Math.random() * colorClasses.length);
-        const newCrit = { id: nextId, name: "New Grammar Criterion", max: 4, colorClass: colorClasses[rndIdx], textClass: textClasses[rndIdx] };
+        const newCrit = { id: 0, name: "New Grammar Criterion", max: 4, colorClass: colorClasses[rndIdx], textClass: textClasses[rndIdx] };
         currentRubric.grammar.push(newCrit);
+        reindexCriteria(currentRubric);
         renderRubric(currentRubric.id);
         showToastAlert('➕ Added new criterion to Grammar section!', 'info');
     });
