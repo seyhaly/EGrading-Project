@@ -623,11 +623,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const restoreDefaultMainBtn = document.getElementById('restore-default-main-btn');
 
     function performRestoreDefaults() {
-        if (confirm("Are you sure you want to restore original default rubrics? This will reset custom edits.")) {
-            RUBRICS = JSON.parse(JSON.stringify(INITIAL_DEFAULT_RUBRICS));
-            saveRubricsToLocalStorage();
-            syncRubricsToCloud();
-            showToastAlert('🔄 Restored original default rubrics globally!', 'info');
+        if (!currentRubric) return;
+        const activeLevel = currentRubric.id;
+        if (confirm(`Are you sure you want to restore original default rubric for Level ${activeLevel}? This will reset edits for Level ${activeLevel} only.`)) {
+            if (INITIAL_DEFAULT_RUBRICS[activeLevel]) {
+                RUBRICS[activeLevel] = JSON.parse(JSON.stringify(INITIAL_DEFAULT_RUBRICS[activeLevel]));
+                saveRubricsToLocalStorage();
+                renderRubric(activeLevel);
+                syncRubricsToCloud();
+                showToastAlert(`🔄 Restored original default rubric for Level ${activeLevel}!`, 'info');
+            }
         }
     }
 
