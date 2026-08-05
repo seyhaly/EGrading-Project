@@ -336,7 +336,7 @@ document.addEventListener('DOMContentLoaded', () => {
             'A1': '#1D8A7E',
             'A2': '#3874CB',
             'B1': '#7057A4',
-            'B2': '#8B5CF6'
+            'B2': '#583595'
         };
         const activeColor = levelColors[currentRubric.id] || '#1D8A7E';
 
