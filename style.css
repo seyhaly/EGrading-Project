@@ -315,6 +315,10 @@ select.level-b1 {
     background-color: #7057A4 !important;
 }
 
+select.level-b2 {
+    background-color: #8B5CF6 !important;
+}
+
 .level-select option {
     background: var(--bg-main);
     color: var(--text-main);

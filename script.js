@@ -75,6 +75,31 @@ document.addEventListener('DOMContentLoaded', () => {
                 { id: 9, name: "Subject-Verb Agreement", max: 4, colorClass: "bg-cyan", textClass: "text-cyan" },
                 { id: 10, name: "Compound Sentences", max: 4, colorClass: "bg-emerald", textClass: "text-emerald" }
             ]
+        },
+        "B2": {
+            id: "B2",
+            themeClass: "level-b2",
+            totalExamPoints: 30,
+            contentTitle: "Content and Paragraph Structure",
+            grammarTitle: "Grammar for writing",
+            contentPoints: 15,
+            grammarPoints: 15,
+            contentWeightPct: 50,
+            grammarWeightPct: 50,
+            content: [
+                { id: 1, name: "Paragraph Formatting", max: 2 },
+                { id: 2, name: "Topic Sentence", max: 3 },
+                { id: 3, name: "Supporting Sentences (Main Idea Sentences)", max: 3 },
+                { id: 4, name: "Supporting Sentences (Explanation)", max: 3 },
+                { id: 5, name: "Concluding sentences", max: 3 }
+            ],
+            grammar: [
+                { id: 6, name: "Punctuation & Capitalization", max: 4, colorClass: "bg-purple", textClass: "text-purple" },
+                { id: 7, name: "Transition Words", max: 4, colorClass: "bg-pink", textClass: "text-pink" },
+                { id: 8, name: "Sentence Fragments", max: 4, colorClass: "bg-orange", textClass: "text-orange" },
+                { id: 9, name: "Subject-Verb Agreement", max: 4, colorClass: "bg-cyan", textClass: "text-cyan" },
+                { id: 10, name: "Compound Sentences", max: 4, colorClass: "bg-emerald", textClass: "text-emerald" }
+            ]
         }
     };
 
@@ -310,7 +335,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const levelColors = {
             'A1': '#1D8A7E',
             'A2': '#3874CB',
-            'B1': '#7057A4'
+            'B1': '#7057A4',
+            'B2': '#8B5CF6'
         };
         const activeColor = levelColors[currentRubric.id] || '#1D8A7E';
 
