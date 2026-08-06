@@ -154,7 +154,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     let RUBRICS = JSON.parse(JSON.stringify(INITIAL_DEFAULT_RUBRICS));
-    const CLOUD_SYNC_URL = 'https://jsonblob.com/api/jsonBlob/019fd040-136f-7c27-9b04-41dfe04820e1';
+    let CLOUD_SYNC_URL = 'https://jsonblob.com/api/jsonBlob/019fd56f-0428-719a-bb89-7eeb3cf24391';
 
     // 2. DOM Elements
     const contentCritList = document.getElementById('content-criteria-list');
@@ -273,11 +273,26 @@ document.addEventListener('DOMContentLoaded', () => {
         saveRubricsToLocalStorage();
         showToastAlert('☁️ Syncing changes to cloud...', 'warning');
         try {
-            const res = await fetch(CLOUD_SYNC_URL, {
+            let res = await fetch(CLOUD_SYNC_URL, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ RUBRICS })
             });
+            if (res.status === 404) {
+                // Endpoint expired or missing: Auto-create a fresh JSONBlob
+                const createRes = await fetch('https://jsonblob.com/api/jsonBlob', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ RUBRICS })
+                });
+                if (createRes.ok) {
+                    const loc = createRes.headers.get('Location');
+                    if (loc) {
+                        CLOUD_SYNC_URL = loc.startsWith('http') ? loc : 'https://jsonblob.com' + loc;
+                        res = createRes;
+                    }
+                }
+            }
             if (res.ok) {
                 showToastAlert('☁️ Saved & Synced globally for all teachers!', 'success');
             } else {
