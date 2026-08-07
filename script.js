@@ -168,9 +168,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const sunIcon = document.querySelector('.sun-icon');
     const moonIcon = document.querySelector('.moon-icon');
 
-    // Edit Mode Controls
+    // Edit Mode & Style Controls
     const editModeToggleBtn = document.getElementById('edit-mode-toggle');
     const editToggleLabel = document.getElementById('edit-toggle-label');
+    const clayStyleToggleBtn = document.getElementById('clay-style-toggle');
+    const clayToggleLabel = document.getElementById('clay-toggle-label');
     const editToolbar = document.getElementById('edit-toolbar');
     const saveSyncBtn = document.getElementById('save-sync-btn');
     const restoreDefaultBtn = document.getElementById('restore-default-btn');
@@ -1021,7 +1023,27 @@ document.addEventListener('DOMContentLoaded', () => {
     document.documentElement.setAttribute('data-theme', savedTheme);
     sunIcon.style.display = savedTheme === 'dark' ? 'none' : 'block';
     moonIcon.style.display = savedTheme === 'dark' ? 'block' : 'none';
-    
+
+    // Claymorphism Style Mode Initialization & Event Listener
+    const savedStyleMode = localStorage.getItem('ui_style_mode');
+    if (savedStyleMode === 'clay') {
+        document.body.classList.add('clay-mode');
+        if (clayToggleLabel) {
+            clayToggleLabel.textContent = 'Clay UI: ON';
+        }
+    }
+
+    if (clayStyleToggleBtn) {
+        clayStyleToggleBtn.addEventListener('click', () => {
+            const isClay = document.body.classList.toggle('clay-mode');
+            localStorage.setItem('ui_style_mode', isClay ? 'clay' : 'glass');
+            if (clayToggleLabel) {
+                clayToggleLabel.textContent = isClay ? 'Clay UI: ON' : 'Clay UI';
+            }
+            showToastAlert(isClay ? '🏺 Switched to Claymorphism UI Mode!' : '✨ Switched to Glassmorphism UI Mode!', 'info');
+        });
+    }
+
     // 1) Load saved custom rubrics from local storage first
     loadRubricsFromLocalStorage();
 

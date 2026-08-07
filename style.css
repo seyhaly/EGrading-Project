@@ -1200,3 +1200,162 @@ select.level-ceb2 {
     background: rgba(255, 255, 255, 0.15);
     color: #FFFFFF;
 }
+
+/* ==========================================================================
+   CLAYMORPHISM DESIGN SYSTEM (.clay-mode)
+   ========================================================================== */
+
+body.clay-mode {
+    --clay-radius-lg: 32px;
+    --clay-radius-md: 24px;
+    --clay-radius-sm: 18px;
+    --clay-radius-pill: 999px;
+    
+    /* Clay Lighting Recipe: Dual inner shadows + soft outer drop shadow */
+    --clay-shadow-card: 0 20px 40px rgba(120, 110, 160, 0.14),
+                        inset 0 -6px 14px rgba(140, 130, 180, 0.15),
+                        inset 0 6px 14px rgba(255, 255, 255, 0.85);
+
+    --clay-shadow-btn: 0 10px 20px rgba(120, 110, 160, 0.18),
+                       inset 0 -4px 10px rgba(140, 130, 180, 0.2),
+                       inset 0 4px 10px rgba(255, 255, 255, 0.8);
+
+    --clay-shadow-pressed: 0 4px 10px rgba(120, 110, 160, 0.15),
+                          inset 0 -2px 5px rgba(140, 130, 180, 0.25),
+                          inset 0 6px 10px rgba(0, 0, 0, 0.12);
+
+    background: radial-gradient(circle at 10% 20%, #ffe4e6 0%, #f3e8ff 45%, #e0f2fe 100%) !important;
+    background-attachment: fixed !important;
+}
+
+body.clay-mode[data-theme="dark"] {
+    --clay-shadow-card: 0 20px 40px rgba(0, 0, 0, 0.5),
+                        inset 0 -6px 14px rgba(0, 0, 0, 0.4),
+                        inset 0 6px 14px rgba(255, 255, 255, 0.12);
+
+    --clay-shadow-btn: 0 10px 20px rgba(0, 0, 0, 0.4),
+                       inset 0 -4px 10px rgba(0, 0, 0, 0.35),
+                       inset 0 4px 10px rgba(255, 255, 255, 0.15);
+
+    --clay-shadow-pressed: 0 4px 10px rgba(0, 0, 0, 0.6),
+                          inset 0 -2px 5px rgba(0, 0, 0, 0.5),
+                          inset 0 6px 10px rgba(0, 0, 0, 0.3);
+
+    background: radial-gradient(circle at 10% 20%, #1e1b2e 0%, #0f172a 50%, #090d16 100%) !important;
+    background-attachment: fixed !important;
+}
+
+/* Inflated Clay Cards & Panels */
+body.clay-mode .glass-panel,
+body.clay-mode .summary-card,
+body.clay-mode .header,
+body.clay-mode .edit-toolbar,
+body.clay-mode .score-card-float {
+    border-radius: var(--clay-radius-lg) !important;
+    background: #ffffff !important;
+    box-shadow: var(--clay-shadow-card) !important;
+    border: none !important;
+    backdrop-filter: none !important;
+}
+
+body.clay-mode[data-theme="dark"] .glass-panel,
+body.clay-mode[data-theme="dark"] .summary-card,
+body.clay-mode[data-theme="dark"] .header,
+body.clay-mode[data-theme="dark"] .edit-toolbar,
+body.clay-mode[data-theme="dark"] .score-card-float {
+    background: #1e293b !important;
+}
+
+/* Clay Criteria Rows */
+body.clay-mode .crit-row {
+    border-radius: var(--clay-radius-md) !important;
+    background: #f8fafc !important;
+    box-shadow: 0 8px 18px rgba(140, 130, 180, 0.1),
+                inset 0 -3px 8px rgba(180, 170, 210, 0.12),
+                inset 0 3px 8px rgba(255, 255, 255, 0.9) !important;
+    border: none !important;
+    margin-bottom: 0.75rem;
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s ease !important;
+}
+
+body.clay-mode[data-theme="dark"] .crit-row {
+    background: #0f172a !important;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.3),
+                inset 0 -3px 8px rgba(0, 0, 0, 0.3),
+                inset 0 3px 8px rgba(255, 255, 255, 0.08) !important;
+}
+
+body.clay-mode .crit-row:hover {
+    transform: translateY(-2px) scale(1.008) !important;
+    box-shadow: 0 14px 28px rgba(140, 130, 180, 0.16),
+                inset 0 -3px 8px rgba(180, 170, 210, 0.12),
+                inset 0 3px 8px rgba(255, 255, 255, 0.9) !important;
+}
+
+/* Squishy Radio Score Buttons */
+body.clay-mode .score-btn {
+    border-radius: var(--clay-radius-pill) !important;
+    background: #ffffff !important;
+    box-shadow: var(--clay-shadow-btn) !important;
+    border: none !important;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease !important;
+    min-width: 44px;
+    height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+body.clay-mode .score-btn:hover {
+    transform: translateY(-2px) scale(1.05);
+}
+
+body.clay-mode .score-btn:active {
+    transform: translateY(2px) scale(0.94) !important;
+    box-shadow: var(--clay-shadow-pressed) !important;
+}
+
+body.clay-mode .score-btn input[type="radio"]:checked + span {
+    background: linear-gradient(180deg, var(--primary) 0%, var(--primary-glow) 100%) !important;
+    color: #ffffff !important;
+    box-shadow: var(--clay-shadow-btn) !important;
+}
+
+/* Clay Badges, Buttons, & Controls */
+body.clay-mode .btn,
+body.clay-mode .badge,
+body.clay-mode .year-toggle-btn {
+    border-radius: var(--clay-radius-pill) !important;
+    box-shadow: var(--clay-shadow-btn) !important;
+    border: none !important;
+    font-weight: 700 !important;
+    transition: transform 0.15s ease, box-shadow 0.15s ease !important;
+}
+
+body.clay-mode .btn:active,
+body.clay-mode .year-toggle-btn:active {
+    transform: translateY(2px) scale(0.95) !important;
+    box-shadow: var(--clay-shadow-pressed) !important;
+}
+
+body.clay-mode .clay-toggle-btn {
+    background: linear-gradient(180deg, #f472b6 0%, #db2777 100%) !important;
+    color: #ffffff !important;
+}
+
+body.clay-mode .clay-toggle-btn .clay-icon-badge {
+    display: inline-block;
+    animation: squishy-float 2s ease-in-out infinite alternate;
+}
+
+@keyframes squishy-float {
+    0% { transform: translateY(0) scale(1); }
+    100% { transform: translateY(-3px) scale(1.1); }
+}
+
+body.clay-mode .score-val {
+    font-size: 2rem !important;
+    font-weight: 900 !important;
+    color: var(--primary) !important;
+    text-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
