@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClayHabit — Claymorphism Life & Habit Tracker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=1.0">
+</head>
+<body>
+
+<div class="app-stage">
+    <!-- Main Clay Header -->
+    <header class="clay-header">
+        <div class="header-left">
+            <div class="clay-logo-badge">
+                <span class="logo-icon">🏺</span>
+                <span class="logo-text">ClayHabit</span>
+            </div>
+            <div class="clay-pill streak-pill">
+                <span class="pill-fire">🔥</span>
+                <span id="total-streak-count" class="pill-text">14 Day Streak</span>
+            </div>
+        </div>
+        <div class="header-right">
+            <button id="add-habit-btn" class="clay-btn btn-coral">
+                <span class="btn-icon">✨</span>
+                <span>+ Add Habit</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Grid Dashboard -->
+    <main class="dashboard-grid">
+        <!-- Hero Greeting Card -->
+        <section class="clay-card hero-card">
+            <div class="hero-content">
+                <span class="hero-badge">DAILY SUMMARY</span>
+                <h1 class="hero-title">Keep up the momentum, Seyha! 🌟</h1>
+                <p class="hero-subtitle">You've completed 4 of 5 habits today. You are on a roll!</p>
+            </div>
+            <div class="hero-progress-ring">
+                <div class="clay-circle-progress">
+                    <span class="progress-num" id="daily-completion-pct">80%</span>
+                    <span class="progress-lbl">Done Today</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Habit Cards Grid -->
+        <section class="habits-section">
+            <div class="section-header">
+                <h2 class="section-title">Your Habits</h2>
+                <span class="section-subtitle">Click to log your progress & squash the clay!</span>
+            </div>
+
+            <div class="habits-grid" id="habits-container">
+                <!-- Habit 1: Morning Run (Matches User Sample) -->
+                <div class="clay-card habit-card" data-id="habit-1">
+                    <div class="clay-badge float-badge">+2 today</div>
+                    <div class="habit-header">
+                        <div class="clay-icon-box icon-amber">🔥</div>
+                        <div class="habit-info">
+                            <h3 class="habit-name">Morning run</h3>
+                            <p class="habit-streak">12 day streak</p>
+                        </div>
+                    </div>
+                    <div class="streak-tracker-pills">
+                        <span class="clay-pill tracker-pill pill-pink active"></span>
+                        <span class="clay-pill tracker-pill pill-blue active"></span>
+                        <span class="clay-pill tracker-pill pill-green active"></span>
+                        <span class="clay-pill tracker-pill pill-orange active"></span>
+                        <span class="clay-pill tracker-pill pill-empty"></span>
+                    </div>
+                    <button class="clay-btn btn-violet habit-action-btn" data-action="toggle">
+                        Mark today done
+                    </button>
+                </div>
+
+                <!-- Habit 2: Daily Hydration -->
+                <div class="clay-card habit-card" data-id="habit-2">
+                    <div class="clay-badge float-badge">2.5L / 3.0L</div>
+                    <div class="habit-header">
+                        <div class="clay-icon-box icon-blue">💧</div>
+                        <div class="habit-info">
+                            <h3 class="habit-name">Stay Hydrated</h3>
+                            <p class="habit-streak">8 day streak</p>
+                        </div>
+                    </div>
+                    <div class="clay-progress-track">
+                        <div class="clay-progress-fill bg-blue" style="width: 83%;"></div>
+                    </div>
+                    <button class="clay-btn btn-sky habit-action-btn" data-action="water">
+                        + 250ml Water
+                    </button>
+                </div>
+
+                <!-- Habit 3: Deep Reading -->
+                <div class="clay-card habit-card" data-id="habit-3">
+                    <div class="clay-badge float-badge">30 mins</div>
+                    <div class="habit-header">
+                        <div class="clay-icon-box icon-green">📚</div>
+                        <div class="habit-info">
+                            <h3 class="habit-name">Deep Reading</h3>
+                            <p class="habit-streak">15 day streak</p>
+                        </div>
+                    </div>
+                    <div class="streak-tracker-pills">
+                        <span class="clay-pill tracker-pill pill-green active"></span>
+                        <span class="clay-pill tracker-pill pill-green active"></span>
+                        <span class="clay-pill tracker-pill pill-green active"></span>
+                        <span class="clay-pill tracker-pill pill-green active"></span>
+                        <span class="clay-pill tracker-pill pill-green active"></span>
+                    </div>
+                    <button class="clay-btn btn-mint habit-action-btn" data-action="toggle">
+                        Completed Today
+                    </button>
+                </div>
+
+                <!-- Habit 4: Coding Practice -->
+                <div class="clay-card habit-card" data-id="habit-4">
+                    <div class="clay-badge float-badge">2 hours</div>
+                    <div class="habit-header">
+                        <div class="clay-icon-box icon-purple">💻</div>
+                        <div class="habit-info">
+                            <h3 class="habit-name">Code & Build</h3>
+                            <p class="habit-streak">24 day streak</p>
+                        </div>
+                    </div>
+                    <div class="streak-tracker-pills">
+                        <span class="clay-pill tracker-pill pill-periwinkle active"></span>
+                        <span class="clay-pill tracker-pill pill-periwinkle active"></span>
+                        <span class="clay-pill tracker-pill pill-periwinkle active"></span>
+                        <span class="clay-pill tracker-pill pill-periwinkle active"></span>
+                        <span class="clay-pill tracker-pill pill-empty"></span>
+                    </div>
+                    <button class="clay-btn btn-periwinkle habit-action-btn" data-action="toggle">
+                        Log Session
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Right Side Panel: Clay Focus Timer & Quick Tasks -->
+        <aside class="side-panel">
+            <!-- Clay Focus Timer Card -->
+            <div class="clay-card timer-card">
+                <span class="card-label">CLAY POMODORO</span>
+                <h3 class="card-heading">Focus Timer</h3>
+                
+                <div class="clay-timer-circle">
+                    <span id="timer-display" class="timer-time">25:00</span>
+                    <span id="timer-status" class="timer-mode">Deep Work</span>
+                </div>
+
+                <div class="timer-controls">
+                    <button id="timer-start-btn" class="clay-btn btn-coral timer-btn">Start</button>
+                    <button id="timer-reset-btn" class="clay-btn btn-cream timer-btn">Reset</button>
+                </div>
+
+                <div class="timer-presets">
+                    <button class="clay-pill preset-pill active" data-time="1500">25m</button>
+                    <button class="clay-pill preset-pill" data-time="900">15m</button>
+                    <button class="clay-pill preset-pill" data-time="300">5m</button>
+                </div>
+            </div>
+
+            <!-- Clay Tasks Checklist Card -->
+            <div class="clay-card tasks-card">
+                <span class="card-label">TODAY'S TASKS</span>
+                <h3 class="card-heading">Quick Checklist</h3>
+
+                <ul class="task-list" id="task-list-container">
+                    <li class="task-item">
+                        <label class="clay-checkbox">
+                            <input type="checkbox" checked>
+                            <span class="checkbox-mark">✓</span>
+                        </label>
+                        <span class="task-text done">Review E-Grading rubrics</span>
+                    </li>
+                    <li class="task-item">
+                        <label class="clay-checkbox">
+                            <input type="checkbox">
+                            <span class="checkbox-mark"></span>
+                        </label>
+                        <span class="task-text">Push latest commits to GitHub</span>
+                    </li>
+                    <li class="task-item">
+                        <label class="clay-checkbox">
+                            <input type="checkbox">
+                            <span class="checkbox-mark"></span>
+                        </label>
+                        <span class="task-text">30-min evening jog</span>
+                    </li>
+                </ul>
+            </div>
+        </aside>
+    </main>
+</div>
+
+<!-- Modal: Add Custom Habit -->
+<div class="modal-backdrop" id="add-modal" style="display: none;">
+    <div class="clay-card modal-card">
+        <div class="modal-header">
+            <h3 class="modal-title">✨ Create New Habit</h3>
+            <button class="modal-close" id="modal-close-btn">&times;</button>
+        </div>
+        <form id="new-habit-form">
+            <div class="form-group">
+                <label class="form-label">Habit Name</label>
+                <input type="text" id="habit-name-input" class="clay-input" placeholder="e.g. Daily Meditation" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Icon Emoji</label>
+                <input type="text" id="habit-icon-input" class="clay-input" value="🧘" required maxlength="2">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Color Theme</label>
+                <div class="color-options">
+                    <label class="color-radio"><input type="radio" name="theme-color" value="btn-violet" checked><span class="color-dot bg-violet"></span></label>
+                    <label class="color-radio"><input type="radio" name="theme-color" value="btn-coral"><span class="color-dot bg-coral"></span></label>
+                    <label class="color-radio"><input type="radio" name="theme-color" value="btn-sky"><span class="color-dot bg-sky"></span></label>
+                    <label class="color-radio"><input type="radio" name="theme-color" value="btn-mint"><span class="color-dot bg-mint"></span></label>
+                    <label class="color-radio"><input type="radio" name="theme-color" value="btn-periwinkle"><span class="color-dot bg-periwinkle"></span></label>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button type="submit" class="clay-btn btn-violet">Create Habit</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="script.js?v=1.0"></script>
+</body>
+</html>

@@ -1,0 +1,644 @@
+/* ==========================================================================
+   CLAYMORPHISM SPECIFICATION DESIGN SYSTEM
+   Exact 3-Layer Shadow Recipe + Oversized Radii + Opaque Pastels + Squash Active
+   ========================================================================== */
+
+:root {
+    /* Palette Tokens */
+    --clay-bg-stage: radial-gradient(circle at 10% 20%, #ffe4e6 0%, #f3e8ff 50%, #e0f2fe 100%);
+    --clay-card-white: #ffffff;
+    --clay-lavender: #f4e7fd;
+    --clay-blush: #fde8e8;
+    --clay-mint: #e8f8f0;
+    --clay-cream: #fef3e2;
+    --clay-periwinkle: #edeaff;
+    --clay-sky: #e0f2fe;
+
+    /* Text Colors (High Contrast 4.5:1 min) */
+    --text-primary: #1e1b4b;
+    --text-secondary: #475569;
+    --text-muted: #64748B;
+
+    /* Primary Clay Colors */
+    --violet-main: #a78bfa;
+    --violet-dark: #6d28d9;
+    --coral-main: #f472b6;
+    --coral-dark: #be185d;
+    --sky-main: #38bdf8;
+    --sky-dark: #0369a1;
+    --mint-main: #34d399;
+    --mint-dark: #047857;
+    --orange-main: #fbbf24;
+    --orange-dark: #b45309;
+
+    /* THE SIGNATURE CLAY SHADOW RECIPE (Outer Drop + 2 Inner Shadows) */
+    --clay-shadow-recipe: 
+        0 20px 36px rgba(120, 90, 180, 0.22),
+        inset 0 -8px 14px rgba(120, 90, 180, 0.18),
+        inset 0 6px 12px rgba(255, 255, 255, 0.65);
+
+    --clay-shadow-button: 
+        0 14px 28px rgba(120, 90, 180, 0.25),
+        inset 0 -6px 12px rgba(120, 90, 180, 0.22),
+        inset 0 5px 10px rgba(255, 255, 255, 0.7);
+
+    --clay-shadow-badge: 
+        0 10px 20px rgba(120, 90, 180, 0.18),
+        inset 0 -4px 8px rgba(120, 90, 180, 0.15),
+        inset 0 4px 8px rgba(255, 255, 255, 0.75);
+
+    /* PRESSED / ACTIVE SQUASH SHADOW RECIPE */
+    --clay-shadow-pressed: 
+        0 8px 16px rgba(120, 90, 180, 0.20),
+        inset 0 -4px 8px rgba(120, 90, 180, 0.22),
+        inset 0 10px 14px rgba(120, 90, 180, 0.12);
+
+    --radius-pill: 999px;
+    --radius-blob: 32px;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: var(--clay-bg-stage);
+    background-attachment: fixed;
+    color: var(--text-primary);
+    min-height: 100vh;
+    padding: 2rem;
+    overflow-x: hidden;
+}
+
+.app-stage {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+/* ==========================================================================
+   CLAY HEADER
+   ========================================================================== */
+.clay-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 2rem;
+    border-radius: var(--radius-blob);
+    background: var(--clay-card-white);
+    box-shadow: var(--clay-shadow-recipe);
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+}
+
+.clay-logo-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    background: var(--clay-lavender);
+    padding: 0.6rem 1.25rem;
+    border-radius: var(--radius-pill);
+    box-shadow: var(--clay-shadow-badge);
+}
+
+.logo-icon {
+    font-size: 1.5rem;
+}
+
+.logo-text {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 900;
+    color: var(--violet-dark);
+}
+
+/* ==========================================================================
+   CLAY PILLS & BADGES
+   ========================================================================== */
+.clay-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1.2rem;
+    border-radius: var(--radius-pill);
+    background: var(--clay-periwinkle);
+    box-shadow: var(--clay-shadow-badge);
+    font-weight: 800;
+    font-size: 0.9rem;
+    color: var(--text-primary);
+}
+
+.clay-badge {
+    display: inline-block;
+    padding: 0.4rem 1rem;
+    border-radius: var(--radius-pill);
+    background: var(--clay-blush);
+    color: var(--coral-dark);
+    font-weight: 800;
+    font-size: 0.82rem;
+    box-shadow: var(--clay-shadow-badge);
+}
+
+.float-badge {
+    position: absolute;
+    top: -12px;
+    right: 24px;
+}
+
+/* ==========================================================================
+   CLAY BUTTONS & INTERACTION (SQUASH & STRETCH)
+   ========================================================================== */
+.clay-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.85rem 1.75rem;
+    border-radius: 26px;
+    border: none;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 800;
+    font-size: 1rem;
+    cursor: pointer;
+    box-shadow: var(--clay-shadow-button);
+    transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.15s ease;
+    user-select: none;
+}
+
+.clay-btn:hover {
+    transform: translateY(-2px) scale(1.02);
+}
+
+/* SQUASH THE CLAY ON PRESSED STATE */
+.clay-btn:active,
+.clay-btn.is-pressed {
+    transform: translateY(3px) scale(0.96) !important;
+    box-shadow: var(--clay-shadow-pressed) !important;
+}
+
+/* Color Variants (100% Opaque Fills) */
+.btn-violet {
+    background: var(--violet-main);
+    color: #ffffff;
+}
+
+.btn-coral {
+    background: var(--coral-main);
+    color: #ffffff;
+}
+
+.btn-sky {
+    background: var(--sky-main);
+    color: #ffffff;
+}
+
+.btn-mint {
+    background: var(--mint-main);
+    color: #ffffff;
+}
+
+.btn-periwinkle {
+    background: var(--clay-periwinkle);
+    color: var(--violet-dark);
+}
+
+.btn-cream {
+    background: var(--clay-cream);
+    color: var(--orange-dark);
+}
+
+/* ==========================================================================
+   DASHBOARD LAYOUT & CARDS
+   ========================================================================== */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 2rem;
+}
+
+.clay-card {
+    position: relative;
+    background: var(--clay-card-white);
+    border-radius: var(--radius-blob);
+    padding: 2rem;
+    box-shadow: var(--clay-shadow-recipe);
+}
+
+/* Hero Card */
+.hero-card {
+    grid-column: 1 / -1;
+    background: var(--clay-lavender);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.hero-badge {
+    font-size: 0.78rem;
+    font-weight: 900;
+    color: var(--violet-dark);
+    letter-spacing: 0.05em;
+}
+
+.hero-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 2rem;
+    font-weight: 900;
+    margin: 0.4rem 0;
+    color: var(--text-primary);
+}
+
+.hero-subtitle {
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.clay-circle-progress {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    background: var(--clay-card-white);
+    box-shadow: var(--clay-shadow-recipe);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.progress-num {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: var(--violet-dark);
+}
+
+.progress-lbl {
+    font-size: 0.72rem;
+    font-weight: 800;
+    color: var(--text-muted);
+}
+
+/* Habits Section */
+.habits-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.section-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.6rem;
+    font-weight: 900;
+}
+
+.section-subtitle {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+.habits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.habit-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.habit-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.clay-icon-box {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    box-shadow: var(--clay-shadow-badge);
+}
+
+.icon-amber { background: var(--clay-cream); }
+.icon-blue { background: var(--clay-sky); }
+.icon-green { background: var(--clay-mint); }
+.icon-purple { background: var(--clay-lavender); }
+
+.habit-name {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 800;
+}
+
+.habit-streak {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+.streak-tracker-pills {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.tracker-pill {
+    flex: 1;
+    height: 22px;
+    padding: 0;
+    border-radius: 12px;
+    box-shadow: var(--clay-shadow-badge);
+}
+
+.pill-pink { background: #fbcfe8; }
+.pill-blue { background: #bae6fd; }
+.pill-green { background: #a7f3d0; }
+.pill-orange { background: #fde68a; }
+.pill-periwinkle { background: #c7d2fe; }
+.pill-empty { background: #f1f5f9; box-shadow: inset 0 2px 4px rgba(0,0,0,0.06); }
+
+.clay-progress-track {
+    height: 20px;
+    background: #f1f5f9;
+    border-radius: 12px;
+    box-shadow: inset 0 3px 6px rgba(0,0,0,0.08);
+    overflow: hidden;
+    padding: 3px;
+}
+
+.clay-progress-fill {
+    height: 100%;
+    border-radius: 9px;
+    box-shadow: var(--clay-shadow-badge);
+    transition: width 0.3s ease;
+}
+
+.bg-blue { background: var(--sky-main); }
+
+.habit-action-btn {
+    width: 100%;
+    margin-top: 0.25rem;
+}
+
+/* Side Panel */
+.side-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.card-label {
+    font-size: 0.75rem;
+    font-weight: 900;
+    color: var(--violet-dark);
+    letter-spacing: 0.05em;
+}
+
+.card-heading {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 900;
+    margin-bottom: 1rem;
+}
+
+/* Clay Timer */
+.timer-card {
+    text-align: center;
+    background: var(--clay-cream);
+}
+
+.clay-timer-circle {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background: var(--clay-card-white);
+    box-shadow: var(--clay-shadow-recipe);
+    margin: 1rem auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.timer-time {
+    font-family: 'Outfit', sans-serif;
+    font-size: 2.2rem;
+    font-weight: 900;
+    color: var(--orange-dark);
+}
+
+.timer-mode {
+    font-size: 0.78rem;
+    font-weight: 800;
+    color: var(--text-muted);
+}
+
+.timer-controls {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.timer-btn {
+    flex: 1;
+}
+
+.timer-presets {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.preset-pill {
+    cursor: pointer;
+    background: var(--clay-card-white);
+}
+
+.preset-pill.active {
+    background: var(--orange-main);
+    color: #ffffff;
+}
+
+/* Tasks */
+.task-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.task-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: var(--clay-periwinkle);
+    padding: 0.75rem 1rem;
+    border-radius: 18px;
+    box-shadow: var(--clay-shadow-badge);
+}
+
+.clay-checkbox {
+    cursor: pointer;
+    position: relative;
+}
+
+.clay-checkbox input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.checkbox-mark {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--clay-card-white);
+    box-shadow: var(--clay-shadow-badge);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    font-size: 0.8rem;
+    color: var(--violet-dark);
+}
+
+.clay-checkbox input:checked + .checkbox-mark {
+    background: var(--violet-main);
+    color: #ffffff;
+}
+
+.task-text {
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+.task-text.done {
+    text-decoration: line-through;
+    opacity: 0.55;
+}
+
+/* Modal */
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(30, 27, 75, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-card {
+    width: 400px;
+    background: var(--clay-card-white);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.modal-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 900;
+}
+
+.modal-close {
+    border: none;
+    background: none;
+    font-size: 1.6rem;
+    cursor: pointer;
+    color: var(--text-muted);
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1.25rem;
+}
+
+.form-label {
+    font-weight: 800;
+    font-size: 0.85rem;
+}
+
+.clay-input {
+    padding: 0.8rem 1.2rem;
+    border-radius: 20px;
+    border: none;
+    background: var(--clay-periwinkle);
+    box-shadow: inset 0 3px 6px rgba(0,0,0,0.08), var(--clay-shadow-badge);
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    outline: none;
+}
+
+.color-options {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.color-radio {
+    cursor: pointer;
+}
+
+.color-radio input {
+    position: absolute;
+    opacity: 0;
+}
+
+.color-dot {
+    display: block;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    box-shadow: var(--clay-shadow-badge);
+}
+
+.bg-violet { background: var(--violet-main); }
+.bg-coral { background: var(--coral-main); }
+.bg-sky { background: var(--sky-main); }
+.bg-mint { background: var(--mint-main); }
+.bg-periwinkle { background: var(--clay-periwinkle); }
+
+.color-radio input:checked + .color-dot {
+    transform: scale(1.15);
+    outline: 3px solid var(--violet-dark);
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1.5rem;
+}
+
+@media (max-width: 900px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+}
