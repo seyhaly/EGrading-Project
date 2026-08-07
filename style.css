@@ -109,70 +109,70 @@ body {
 .mesh-blob {
     position: absolute;
     border-radius: 50%;
-    filter: blur(90px);
-    opacity: 0.6;
+    filter: blur(140px);
+    opacity: 0.18;
     will-change: transform;
 }
 
 .mesh-1 {
-    background: radial-gradient(circle, #818cf8 0%, #c084fc 100%);
+    background: radial-gradient(circle, #a5b4fc 0%, #cbd5e1 100%);
     width: 65vw;
     height: 65vw;
     top: -20vh;
     left: -15vw;
-    animation: float 22s ease-in-out infinite;
+    animation: float 28s ease-in-out infinite;
 }
 
 .mesh-2 {
-    background: radial-gradient(circle, #f472b6 0%, #fb7185 100%);
+    background: radial-gradient(circle, #94a3b8 0%, #e2e8f0 100%);
     width: 55vw;
     height: 55vw;
     bottom: -20vh;
     right: -15vw;
-    animation: float 26s ease-in-out infinite reverse;
+    animation: float 32s ease-in-out infinite reverse;
 }
 
 .mesh-3 {
-    background: radial-gradient(circle, #38bdf8 0%, #818cf8 100%);
+    background: radial-gradient(circle, #818cf8 0%, #94a3b8 100%);
     width: 60vw;
     height: 60vw;
     top: 15vh;
     right: -10vw;
-    animation: float 24s ease-in-out infinite;
+    animation: float 30s ease-in-out infinite;
 }
 
 .mesh-4 {
-    background: radial-gradient(circle, #a78bfa 0%, #f472b6 100%);
+    background: radial-gradient(circle, #cbd5e1 0%, #94a3b8 100%);
     width: 75vw;
     height: 75vw;
     bottom: -15vh;
     left: 10vw;
-    animation: float 32s ease-in-out infinite reverse;
+    animation: float 36s ease-in-out infinite reverse;
 }
 
 .mesh-5 {
-    background: radial-gradient(circle, #34d399 0%, #38bdf8 100%);
+    background: radial-gradient(circle, #a5b4fc 0%, #cbd5e1 100%);
     width: 45vw;
     height: 45vw;
     top: 35vh;
     left: 20vw;
-    filter: blur(110px);
-    opacity: 0.4;
-    animation: float 35s ease-in-out infinite;
+    filter: blur(140px);
+    opacity: 0.15;
+    animation: float 40s ease-in-out infinite;
 }
 
 .mesh-6 {
-    background: radial-gradient(circle, #fbbf24 0%, #f472b6 100%);
+    background: radial-gradient(circle, #64748b 0%, #94a3b8 100%);
     width: 50vw;
     height: 50vw;
     bottom: 10vh;
     right: 20vw;
-    opacity: 0.35;
-    animation: float 30s linear infinite;
+    opacity: 0.12;
+    animation: float 34s linear infinite;
 }
 
 [data-theme="dark"] .mesh-blob {
-    opacity: 0.45;
+    opacity: 0.15;
 }
 
 /* Noise overlay - Disabled for performance during scroll */
