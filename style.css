@@ -1251,3 +1251,14 @@ select.level-ceb2 {
     background: rgba(255, 255, 255, 0.15);
     color: #FFFFFF;
 }
+
+/* Normalized /100 Score Row Styling */
+tr.normalized-total-row {
+    border-top: 1px dashed var(--primary);
+    background: var(--primary-transparent);
+}
+
+tr.normalized-total-row td {
+    padding: 0.65rem 0.85rem;
+    font-weight: 800;
+}

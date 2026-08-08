@@ -7,7 +7,7 @@
     <title>E-Grading</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg?v=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=8.0">
+    <link rel="stylesheet" href="style.css?v=9.0">
 </head>
 
 <div class="mesh-wrapper">
@@ -88,8 +88,17 @@
                 <input type="number" id="edit-exam-total-points" value="30" min="1" max="1000" style="width: 75px; padding: 0.3rem 0.5rem; border-radius: 6px; border: 1px solid var(--border); background: var(--bg-main); color: var(--text-main); font-weight: bold; font-size: 0.95rem; text-align: center;">
                 <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted);">pts</span>
             </div>
+            <div style="display: flex; align-items: center; gap: 0.5rem; background: var(--bg-card); padding: 0.35rem 0.75rem; border-radius: 10px; border: 1px solid var(--border);">
+                <label for="edit-show-score-100" style="font-size: 0.875rem; font-weight: 700; color: var(--text-main); cursor: pointer; display: flex; align-items: center; gap: 0.4rem;">
+                    <input type="checkbox" id="edit-show-score-100" style="cursor: pointer; width: 16px; height: 16px; accent-color: var(--primary);">
+                    <span>Display Score / 100</span>
+                </label>
+            </div>
         </div>
-        <div class="toolbar-actions" style="display: flex; gap: 0.75rem; align-items: center;">
+        <div class="toolbar-actions" style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+            <button id="save-local-btn" class="btn btn-secondary" style="padding: 0.5rem 1.1rem; font-size: 0.875rem;">
+                💾 Save Locally
+            </button>
             <button id="save-sync-btn" class="btn btn-primary" style="padding: 0.5rem 1.25rem; font-size: 0.875rem;">
                 ☁️ Save & Sync
             </button>
@@ -214,6 +223,10 @@
                         <td colspan="3" class="total-label text-bold">Total Score/30</td>
                         <td class="total-val text-brand text-bold" id="total-score">0.00</td>
                     </tr>
+                    <tr id="normalized-score-row" class="normalized-total-row" style="display: none;">
+                        <td colspan="3" class="total-label text-bold" style="color: var(--primary);">Normalized Score (/100)</td>
+                        <td class="total-val text-brand text-bold" id="total-score-100" style="color: var(--primary);">0.00 / 100 (0.0%)</td>
+                    </tr>
                 </tfoot>
             </table>
         </div>
@@ -221,7 +234,7 @@
     </main>
 </div>
 
-<script src="script.js?v=8.0"></script>
+<script src="script.js?v=9.0"></script>
 </body>
 
 </html>

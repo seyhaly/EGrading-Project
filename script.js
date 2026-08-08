@@ -173,8 +173,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const editToggleLabel = document.getElementById('edit-toggle-label');
     const editToolbar = document.getElementById('edit-toolbar');
     const saveSyncBtn = document.getElementById('save-sync-btn');
+    const saveLocalBtn = document.getElementById('save-local-btn');
     const restoreDefaultBtn = document.getElementById('restore-default-btn');
     const editExamTotalPointsInput = document.getElementById('edit-exam-total-points');
+    const editShowScore100Toggle = document.getElementById('edit-show-score-100');
 
     // Section Specific Add Buttons & Headers
     const contentHeaderTitleContainer = document.getElementById('content-header-title-container');
@@ -389,10 +391,13 @@ document.addEventListener('DOMContentLoaded', () => {
     function saveEditModeInputsToData() {
         if (!currentRubric || !isEditMode) return;
         
-        // Save Overall Exam Total Points
+        // Save Overall Exam Total Points & Score 100 Toggle
         const totalInput = document.getElementById('edit-exam-total-points');
         if (totalInput) {
             currentRubric.totalExamPoints = Math.max(1, parseInt(totalInput.value) || 30);
+        }
+        if (editShowScore100Toggle) {
+            currentRubric.showScore100 = editShowScore100Toggle.checked;
         }
 
         // Save Category Titles
@@ -559,6 +564,20 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const floatingScore = document.getElementById('top-total-score');
         if (floatingScore) floatingScore.textContent = totalScore.toFixed(2);
+
+        // Normalized /100 Score Row
+        const normalizedRow = document.getElementById('normalized-score-row');
+        const normalizedValCell = document.getElementById('total-score-100');
+        if (currentRubric.showScore100 && totalExamPts !== 100) {
+            const normalizedScore = (totalScore / totalExamPts) * 100;
+            const pct = totalExamPts > 0 ? (totalScore / totalExamPts) * 100 : 0;
+            if (normalizedValCell) {
+                normalizedValCell.textContent = `${normalizedScore.toFixed(2)} / 100 (${pct.toFixed(1)}%)`;
+            }
+            if (normalizedRow) normalizedRow.style.display = 'table-row';
+        } else {
+            if (normalizedRow) normalizedRow.style.display = 'none';
+        }
     }
 
     function renderRubric(levelId) {
@@ -575,6 +594,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (currentRubric.grammarPoints === undefined) currentRubric.grammarPoints = (currentRubric.grammarWeightPct / 100) * currentRubric.totalExamPoints;
 
         if (editExamTotalPointsInput) editExamTotalPointsInput.value = currentRubric.totalExamPoints;
+        if (editShowScore100Toggle) editShowScore100Toggle.checked = !!currentRubric.showScore100;
 
         // Toggle Edit Toolbar UI & Category Wrappers
         if (isEditMode) {
@@ -725,6 +745,16 @@ document.addEventListener('DOMContentLoaded', () => {
         renderRubric(currentRubric.id);
         showToastAlert('➕ Added new criterion to Grammar section!', 'info');
     });
+
+    if (saveLocalBtn) {
+        saveLocalBtn.addEventListener('click', () => {
+            saveEditModeInputsToData();
+            saveRubricsToLocalStorage();
+            isEditMode = false;
+            renderRubric(levelSelect.value);
+            showToastAlert('💾 Saved locally on your laptop!', 'success');
+        });
+    }
 
     saveSyncBtn.addEventListener('click', () => {
         syncRubricsToCloud();
@@ -966,13 +996,30 @@ document.addEventListener('DOMContentLoaded', () => {
             <td colspan="2" style="padding: 6px 8px; font-size: 13px; font-weight: bold; text-align: right;">Total Score / ${currentRubric.totalExamPoints || 30}</td>
             <td style="padding: 6px 8px; font-size: 13px; font-weight: bold; text-align: right; color: #3874CB;">${totalScore.toFixed(2)}</td>
         </tr>`;
+
+        const totalPts = currentRubric.totalExamPoints || 30;
+        let normalizedScoreStr = '';
+        if (currentRubric.showScore100 && totalPts !== 100) {
+            const normVal = (totalScore / totalPts) * 100;
+            const pct = totalPts > 0 ? (totalScore / totalPts) * 100 : 0;
+            normalizedScoreStr = `${normVal.toFixed(2)} / 100 (${pct.toFixed(1)}%)`;
+            html += `<tr style="border-top: 1px dashed #3874CB; background-color: #e0f2fe;">
+                <td colspan="2" style="padding: 6px 8px; font-size: 13px; font-weight: bold; text-align: right; color: #1D4ED8;">Normalized Score (/100)</td>
+                <td style="padding: 6px 8px; font-size: 13px; font-weight: bold; text-align: right; color: #1D4ED8;">${normalizedScoreStr}</td>
+            </tr>`;
+        }
+
         html += `</tfoot></table></div>`;
 
         // Text fallback
         let plainText = `SCORE RECEIPT\n`;
         plainText += `${currentRubric.contentTitle} (${currentRubric.contentWeightPct}%): ${contentWeighted.toFixed(2)}/${currentRubric.contentPoints.toFixed(1)}\n`;
         plainText += `${currentRubric.grammarTitle} (${currentRubric.grammarWeightPct}%): ${grammarWeighted.toFixed(2)}/${currentRubric.grammarPoints.toFixed(1)}\n`;
-        plainText += `TOTAL SCORE: ${totalScore.toFixed(2)} / ${currentRubric.totalExamPoints || 30}.00\n\n`;
+        plainText += `TOTAL SCORE: ${totalScore.toFixed(2)} / ${currentRubric.totalExamPoints || 30}.00\n`;
+        if (currentRubric.showScore100 && totalPts !== 100) {
+            plainText += `NORMALIZED SCORE (/100): ${normalizedScoreStr}\n`;
+        }
+        plainText += `\n`;
         
         plainText += `--- ${currentRubric.contentTitle.toUpperCase()} (${currentRubric.contentWeightPct}%) ---\n`;
         allContent.forEach(c => {
