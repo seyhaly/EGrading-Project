@@ -173,7 +173,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const editToggleLabel = document.getElementById('edit-toggle-label');
     const editToolbar = document.getElementById('edit-toolbar');
     const saveSyncBtn = document.getElementById('save-sync-btn');
-    const saveLocalBtn = document.getElementById('save-local-btn');
     const restoreDefaultBtn = document.getElementById('restore-default-btn');
     const editExamTotalPointsInput = document.getElementById('edit-exam-total-points');
     const editShowScore100Toggle = document.getElementById('edit-show-score-100');
@@ -325,7 +324,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         row.innerHTML = `
             <div class="crit-info">
-                <div class="crit-num ${colorClass}">${crit.id}</div>
+                <div class="crit-num">${crit.id}</div>
                 <span class="crit-name">${crit.name}</span>
             </div>
             <div class="crit-scores">
@@ -364,7 +363,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         row.innerHTML = `
             <div class="crit-info" style="flex: 1; display: flex; align-items: center; gap: 0.75rem;">
-                <div class="crit-num ${colorClass}">${crit.id}</div>
+                <div class="crit-num">${crit.id}</div>
                 <input type="text" class="edit-crit-name" value="${crit.name}" placeholder="Criterion Name" style="flex: 1; padding: 0.5rem 0.75rem; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-main); font-size: 0.95rem; font-weight: 500;">
             </div>
             <div class="edit-crit-controls" style="display: flex; align-items: center; gap: 0.75rem;">
@@ -487,8 +486,10 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const rgbaGlow = hexToRgba(activeColor, 0.4);
         const rgbaTransparant = hexToRgba(activeColor, 0.15);
+        const rgbaBorder = hexToRgba(activeColor, 0.25);
         root.style.setProperty('--primary-glow', rgbaGlow);
         root.style.setProperty('--primary-transparent', rgbaTransparant);
+        root.style.setProperty('--primary-border', rgbaBorder);
     }
 
     function saveScores() {
@@ -570,9 +571,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const normalizedValCell = document.getElementById('total-score-100');
         if (currentRubric.showScore100 && totalExamPts !== 100) {
             const normalizedScore = (totalScore / totalExamPts) * 100;
-            const pct = totalExamPts > 0 ? (totalScore / totalExamPts) * 100 : 0;
             if (normalizedValCell) {
-                normalizedValCell.textContent = `${normalizedScore.toFixed(2)} / 100 (${pct.toFixed(1)}%)`;
+                normalizedValCell.textContent = `${normalizedScore.toFixed(2)} / 100`;
             }
             if (normalizedRow) normalizedRow.style.display = 'table-row';
         } else {
@@ -746,15 +746,6 @@ document.addEventListener('DOMContentLoaded', () => {
         showToastAlert('➕ Added new criterion to Grammar section!', 'info');
     });
 
-    if (saveLocalBtn) {
-        saveLocalBtn.addEventListener('click', () => {
-            saveEditModeInputsToData();
-            saveRubricsToLocalStorage();
-            isEditMode = false;
-            renderRubric(levelSelect.value);
-            showToastAlert('💾 Saved locally on your laptop!', 'success');
-        });
-    }
 
     saveSyncBtn.addEventListener('click', () => {
         syncRubricsToCloud();
@@ -1001,10 +992,9 @@ document.addEventListener('DOMContentLoaded', () => {
         let normalizedScoreStr = '';
         if (currentRubric.showScore100 && totalPts !== 100) {
             const normVal = (totalScore / totalPts) * 100;
-            const pct = totalPts > 0 ? (totalScore / totalPts) * 100 : 0;
-            normalizedScoreStr = `${normVal.toFixed(2)} / 100 (${pct.toFixed(1)}%)`;
+            normalizedScoreStr = `${normVal.toFixed(2)} / 100`;
             html += `<tr style="border-top: 1px dashed #3874CB; background-color: #e0f2fe;">
-                <td colspan="2" style="padding: 6px 8px; font-size: 13px; font-weight: bold; text-align: right; color: #1D4ED8;">Normalized Score (/100)</td>
+                <td colspan="2" style="padding: 6px 8px; font-size: 13px; font-weight: bold; text-align: right; color: #1D4ED8;">Normalized Score</td>
                 <td style="padding: 6px 8px; font-size: 13px; font-weight: bold; text-align: right; color: #1D4ED8;">${normalizedScoreStr}</td>
             </tr>`;
         }
@@ -1017,7 +1007,7 @@ document.addEventListener('DOMContentLoaded', () => {
         plainText += `${currentRubric.grammarTitle} (${currentRubric.grammarWeightPct}%): ${grammarWeighted.toFixed(2)}/${currentRubric.grammarPoints.toFixed(1)}\n`;
         plainText += `TOTAL SCORE: ${totalScore.toFixed(2)} / ${currentRubric.totalExamPoints || 30}.00\n`;
         if (currentRubric.showScore100 && totalPts !== 100) {
-            plainText += `NORMALIZED SCORE (/100): ${normalizedScoreStr}\n`;
+            plainText += `NORMALIZED SCORE: ${normalizedScoreStr}\n`;
         }
         plainText += `\n`;
         

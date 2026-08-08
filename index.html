@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>E-Grading</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg?v=1.0">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css?v=9.0">
 </head>
 
@@ -20,7 +20,7 @@
 </div>
 <div class="noise-overlay"></div>
 
-<div class="floating-score-card glass-panel fade-in" id="draggable-score">
+<div class="floating-score-card fade-in" id="draggable-score">
     <div class="drag-handle" title="Drag to move anywhere">
         <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"></path>
@@ -39,7 +39,7 @@
     <!-- Premium Header -->
     <header class="header glass-panel">
         <div class="header-left">
-            <h1 class="title">E-Grading
+            <h1 class="title"><span class="title-logo">E-Grading</span>
                 <div class="year-toggle-group" id="year-toggle-group">
                     <button class="year-toggle-btn active" data-year="FY">FY</button>
                     <button class="year-toggle-btn" data-year="Y2">Y2</button>
@@ -80,30 +80,45 @@
     </header>
 
     <!-- Edit Toolbar (Shown in Edit Mode) -->
-    <div class="edit-toolbar glass-panel fade-in" id="edit-toolbar" style="display: none; margin-bottom: 2rem; padding: 1.25rem 2rem; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap;">
-        <div class="toolbar-info" style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
-            <span class="badge edit-mode-tag" style="background: var(--primary); padding: 0.35rem 0.75rem;">✏️ EDIT MODE</span>
-            <div style="display: flex; align-items: center; gap: 0.5rem; background: var(--bg-card); padding: 0.35rem 0.75rem; border-radius: 10px; border: 1px solid var(--border);">
-                <label for="edit-exam-total-points" style="font-size: 0.875rem; font-weight: 700; color: var(--text-main);">Overall Exam Score:</label>
-                <input type="number" id="edit-exam-total-points" value="30" min="1" max="1000" style="width: 75px; padding: 0.3rem 0.5rem; border-radius: 6px; border: 1px solid var(--border); background: var(--bg-main); color: var(--text-main); font-weight: bold; font-size: 0.95rem; text-align: center;">
-                <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted);">pts</span>
+    <div class="edit-toolbar glass-panel fade-in" id="edit-toolbar" style="display: none;">
+        <div class="edit-toolbar-left">
+            <span class="badge edit-mode-tag">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 20h9"></path>
+                    <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                </svg>
+                <span>EDIT MODE</span>
+            </span>
+            <div class="edit-toolbar-divider"></div>
+            <div class="edit-toolbar-pill">
+                <label for="edit-exam-total-points">Exam Score:</label>
+                <input type="number" id="edit-exam-total-points" value="30" min="1" max="1000">
+                <span class="pts-unit">pts</span>
             </div>
-            <div style="display: flex; align-items: center; gap: 0.5rem; background: var(--bg-card); padding: 0.35rem 0.75rem; border-radius: 10px; border: 1px solid var(--border);">
-                <label for="edit-show-score-100" style="font-size: 0.875rem; font-weight: 700; color: var(--text-main); cursor: pointer; display: flex; align-items: center; gap: 0.4rem;">
-                    <input type="checkbox" id="edit-show-score-100" style="cursor: pointer; width: 16px; height: 16px; accent-color: var(--primary);">
+            <div class="edit-toolbar-pill">
+                <label for="edit-show-score-100">
+                    <input type="checkbox" id="edit-show-score-100">
                     <span>Display Score / 100</span>
                 </label>
             </div>
         </div>
-        <div class="toolbar-actions" style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
-            <button id="save-local-btn" class="btn btn-secondary" style="padding: 0.5rem 1.1rem; font-size: 0.875rem;">
-                💾 Save Locally
+        <div class="edit-toolbar-right">
+            <button id="restore-default-btn" class="btn btn-secondary">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path>
+                    <path d="M21 3v5h-5"></path>
+                    <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path>
+                    <path d="M8 16H3v5"></path>
+                </svg>
+                <span>Restore Defaults</span>
             </button>
-            <button id="save-sync-btn" class="btn btn-primary" style="padding: 0.5rem 1.25rem; font-size: 0.875rem;">
-                ☁️ Save & Sync
-            </button>
-            <button id="restore-default-btn" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.875rem;">
-                🔄 Restore Defaults
+            <button id="save-sync-btn" class="btn btn-primary">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 16.9A5 5 0 0 0 18 7h-1.26a8 8 0 1 0-11.62 9"></path>
+                    <polyline points="12 11 12 21"></polyline>
+                    <polyline points="8 15 12 11 16 15"></polyline>
+                </svg>
+                <span>Save & Sync</span>
             </button>
         </div>
     </div>
@@ -224,8 +239,8 @@
                         <td class="total-val text-brand text-bold" id="total-score">0.00</td>
                     </tr>
                     <tr id="normalized-score-row" class="normalized-total-row" style="display: none;">
-                        <td colspan="3" class="total-label text-bold" style="color: var(--primary);">Normalized Score (/100)</td>
-                        <td class="total-val text-brand text-bold" id="total-score-100" style="color: var(--primary);">0.00 / 100 (0.0%)</td>
+                        <td colspan="3" class="total-label text-bold" style="color: var(--primary);">Normalized Score</td>
+                        <td class="total-val text-brand text-bold" id="total-score-100" style="color: var(--primary);">0.00 / 100</td>
                     </tr>
                 </tfoot>
             </table>
