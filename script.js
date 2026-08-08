@@ -473,11 +473,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const root = document.documentElement;
         const levelColors = {
             'ECA1': '#1D8A7E',
-            'ECA2': '#3874CB',
+            'ECA2': '#A8324A',
             'ECB1': '#7057A4',
             'CEA2': '#0F6292',
             'CEB1': '#B45309',
-            'CEB2': '#A8324A'
+            'CEB2': '#3874CB'
         };
         const activeColor = levelColors[currentRubric.id] || '#1D8A7E';
 
