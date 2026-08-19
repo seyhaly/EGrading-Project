@@ -227,13 +227,13 @@
   "CEA2": {
     "id": "CEA2",
     "themeClass": "level-cea2",
-    "totalExamPoints": 100,
+    "totalExamPoints": 30,
     "contentTitle": "Content and Paragraph Structure",
     "grammarTitle": "Grammar for writing",
-    "contentPoints": 50,
-    "grammarPoints": 50,
-    "contentWeightPct": 50,
-    "grammarWeightPct": 50,
+    "contentPoints": 18,
+    "grammarPoints": 12,
+    "contentWeightPct": 60,
+    "grammarWeightPct": 40,
     "content": [
       {
         "id": 1,
@@ -259,46 +259,39 @@
         "id": 5,
         "name": "Concluding sentence",
         "max": 3
-      },
-      {
-        "id": 6,
-        "name": "New Content Criterion",
-        "max": 3,
-        "colorClass": "special-green",
-        "textClass": ""
       }
     ],
     "grammar": [
       {
-        "id": 7,
+        "id": 6,
         "name": "Punctuation & Capitalization",
         "max": 4,
         "colorClass": "bg-purple",
         "textClass": "text-purple"
       },
       {
-        "id": 8,
+        "id": 7,
         "name": "Transition Words",
         "max": 4,
         "colorClass": "bg-pink",
         "textClass": "text-pink"
       },
       {
-        "id": 9,
+        "id": 8,
         "name": "Sentence Fragments",
         "max": 4,
         "colorClass": "bg-orange",
         "textClass": "text-orange"
       },
       {
-        "id": 10,
+        "id": 9,
         "name": "Subject-Verb Agreement",
         "max": 4,
         "colorClass": "bg-cyan",
         "textClass": "text-cyan"
       },
       {
-        "id": 11,
+        "id": 10,
         "name": "Compound Sentence",
         "max": 4,
         "colorClass": "bg-emerald",
