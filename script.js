@@ -255,9 +255,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function fetchCloudRubrics() {
         try {
-            const res = await fetch(GITHUB_RAW_URL + '?t=' + Date.now(), { cache: 'no-store' });
+            // First fetch directly from GitHub REST API (bypasses raw CDN caching for instant real-time sync)
+            const res = await fetch(GITHUB_REPO_API + '?t=' + Date.now(), {
+                headers: {
+                    'Authorization': `token ${GITHUB_TOKEN}`,
+                    'Accept': 'application/vnd.github.v3+json'
+                },
+                cache: 'no-store'
+            });
             if (res.ok) {
-                const data = await res.json();
+                const getJson = await res.json();
+                if (getJson && getJson.content) {
+                    const decodedStr = decodeURIComponent(escape(atob(getJson.content.replace(/\s/g, ''))));
+                    const data = JSON.parse(decodedStr);
+                    if (data && typeof data === 'object' && Object.keys(data).length > 0) {
+                        Object.assign(RUBRICS, data);
+                        saveRubricsToLocalStorage();
+                        if (currentRubric && RUBRICS[currentRubric.id]) {
+                            renderRubric(currentRubric.id);
+                        }
+                        return;
+                    }
+                }
+            }
+            // Fallback to Raw CDN URL
+            const rawRes = await fetch(GITHUB_RAW_URL + '?t=' + Date.now(), { cache: 'no-store' });
+            if (rawRes.ok) {
+                const data = await rawRes.json();
                 if (data && typeof data === 'object' && Object.keys(data).length > 0) {
                     Object.assign(RUBRICS, data);
                     saveRubricsToLocalStorage();
