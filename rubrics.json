@@ -227,11 +227,11 @@
   "CEA2": {
     "id": "CEA2",
     "themeClass": "level-cea2",
-    "totalExamPoints": 30,
+    "totalExamPoints": 100,
     "contentTitle": "Content and Paragraph Structure",
     "grammarTitle": "Grammar for writing",
-    "contentPoints": 18,
-    "grammarPoints": 12,
+    "contentPoints": 60,
+    "grammarPoints": 40,
     "contentWeightPct": 60,
     "grammarWeightPct": 40,
     "content": [
@@ -297,7 +297,8 @@
         "colorClass": "bg-emerald",
         "textClass": "text-emerald"
       }
-    ]
+    ],
+    "showScore100": false
   },
   "CEB1": {
     "id": "CEB1",
