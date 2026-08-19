@@ -1,0 +1,452 @@
+{
+  "ECA1": {
+    "id": "ECA1",
+    "themeClass": "level-eca1",
+    "totalExamPoints": 30,
+    "contentTitle": "Content and Paragraph Structure",
+    "grammarTitle": "Grammar for writing",
+    "contentPoints": 18,
+    "grammarPoints": 12,
+    "contentWeightPct": 60,
+    "grammarWeightPct": 40,
+    "content": [
+      {
+        "id": 1,
+        "name": "Paragraph Formatting",
+        "max": 2
+      },
+      {
+        "id": 2,
+        "name": "Topic Sentence",
+        "max": 3
+      },
+      {
+        "id": 3,
+        "name": "Supporting Sentences (Main Idea Sentence)",
+        "max": 3
+      },
+      {
+        "id": 4,
+        "name": "Supporting Sentences (Explanation)",
+        "max": 3
+      },
+      {
+        "id": 5,
+        "name": "Concluding sentence",
+        "max": 3
+      }
+    ],
+    "grammar": [
+      {
+        "id": 6,
+        "name": "Punctuation & Capitalization",
+        "max": 4,
+        "colorClass": "bg-purple",
+        "textClass": "text-purple"
+      },
+      {
+        "id": 7,
+        "name": "Transition Words",
+        "max": 4,
+        "colorClass": "bg-pink",
+        "textClass": "text-pink"
+      },
+      {
+        "id": 8,
+        "name": "Sentence Fragments",
+        "max": 4,
+        "colorClass": "bg-orange",
+        "textClass": "text-orange"
+      },
+      {
+        "id": 9,
+        "name": "Subject-Verb Agreement",
+        "max": 4,
+        "colorClass": "bg-cyan",
+        "textClass": "text-cyan"
+      },
+      {
+        "id": 10,
+        "name": "Compound Sentence",
+        "max": 4,
+        "colorClass": "bg-emerald",
+        "textClass": "text-emerald"
+      }
+    ]
+  },
+  "ECA2": {
+    "id": "ECA2",
+    "themeClass": "level-eca2",
+    "totalExamPoints": 30,
+    "contentTitle": "Content and Paragraph Structure",
+    "grammarTitle": "Grammar for writing",
+    "contentPoints": 18,
+    "grammarPoints": 12,
+    "contentWeightPct": 60,
+    "grammarWeightPct": 40,
+    "content": [
+      {
+        "id": 1,
+        "name": "Paragraph Formatting",
+        "max": 2
+      },
+      {
+        "id": 2,
+        "name": "Topic Sentence",
+        "max": 3
+      },
+      {
+        "id": 3,
+        "name": "Supporting Sentences (Main Idea Sentence)",
+        "max": 3
+      },
+      {
+        "id": 4,
+        "name": "Supporting Sentences (Explanation)",
+        "max": 3
+      },
+      {
+        "id": 5,
+        "name": "Concluding sentence",
+        "max": 3
+      }
+    ],
+    "grammar": [
+      {
+        "id": 6,
+        "name": "Punctuation & Capitalization",
+        "max": 4,
+        "colorClass": "bg-purple",
+        "textClass": "text-purple"
+      },
+      {
+        "id": 7,
+        "name": "Transition Words",
+        "max": 4,
+        "colorClass": "bg-pink",
+        "textClass": "text-pink"
+      },
+      {
+        "id": 8,
+        "name": "Sentence Fragments",
+        "max": 4,
+        "colorClass": "bg-orange",
+        "textClass": "text-orange"
+      },
+      {
+        "id": 9,
+        "name": "Subject-Verb Agreement",
+        "max": 4,
+        "colorClass": "bg-cyan",
+        "textClass": "text-cyan"
+      },
+      {
+        "id": 10,
+        "name": "Compound Sentence",
+        "max": 4,
+        "colorClass": "bg-emerald",
+        "textClass": "text-emerald"
+      }
+    ]
+  },
+  "ECB1": {
+    "id": "ECB1",
+    "themeClass": "level-ecb1",
+    "totalExamPoints": 30,
+    "contentTitle": "Content and Paragraph Structure",
+    "grammarTitle": "Grammar for writing",
+    "contentPoints": 15,
+    "grammarPoints": 15,
+    "contentWeightPct": 50,
+    "grammarWeightPct": 50,
+    "content": [
+      {
+        "id": 1,
+        "name": "Paragraph Formatting",
+        "max": 2
+      },
+      {
+        "id": 2,
+        "name": "Topic Sentence",
+        "max": 3
+      },
+      {
+        "id": 3,
+        "name": "Supporting Sentences (Main Idea Sentences)",
+        "max": 3
+      },
+      {
+        "id": 4,
+        "name": "Supporting Sentences (Explanation)",
+        "max": 3
+      },
+      {
+        "id": 5,
+        "name": "Concluding sentences",
+        "max": 3
+      }
+    ],
+    "grammar": [
+      {
+        "id": 6,
+        "name": "Punctuation & Capitalization",
+        "max": 4,
+        "colorClass": "bg-purple",
+        "textClass": "text-purple"
+      },
+      {
+        "id": 7,
+        "name": "Transition Words",
+        "max": 4,
+        "colorClass": "bg-pink",
+        "textClass": "text-pink"
+      },
+      {
+        "id": 8,
+        "name": "Sentence Fragments",
+        "max": 4,
+        "colorClass": "bg-orange",
+        "textClass": "text-orange"
+      },
+      {
+        "id": 9,
+        "name": "Subject-Verb Agreement",
+        "max": 4,
+        "colorClass": "bg-cyan",
+        "textClass": "text-cyan"
+      },
+      {
+        "id": 10,
+        "name": "Compound Sentences",
+        "max": 4,
+        "colorClass": "bg-emerald",
+        "textClass": "text-emerald"
+      }
+    ]
+  },
+  "CEA2": {
+    "id": "CEA2",
+    "themeClass": "level-cea2",
+    "totalExamPoints": 30,
+    "contentTitle": "Content and Paragraph Structure",
+    "grammarTitle": "Grammar for writing",
+    "contentPoints": 18,
+    "grammarPoints": 12,
+    "contentWeightPct": 60,
+    "grammarWeightPct": 40,
+    "content": [
+      {
+        "id": 1,
+        "name": "Paragraph Formatting",
+        "max": 2
+      },
+      {
+        "id": 2,
+        "name": "Topic Sentence",
+        "max": 3
+      },
+      {
+        "id": 3,
+        "name": "Supporting Sentences (Main Idea Sentence)",
+        "max": 3
+      },
+      {
+        "id": 4,
+        "name": "Supporting Sentences (Explanation)",
+        "max": 3
+      },
+      {
+        "id": 5,
+        "name": "Concluding sentence",
+        "max": 3
+      }
+    ],
+    "grammar": [
+      {
+        "id": 6,
+        "name": "Punctuation & Capitalization",
+        "max": 4,
+        "colorClass": "bg-purple",
+        "textClass": "text-purple"
+      },
+      {
+        "id": 7,
+        "name": "Transition Words",
+        "max": 4,
+        "colorClass": "bg-pink",
+        "textClass": "text-pink"
+      },
+      {
+        "id": 8,
+        "name": "Sentence Fragments",
+        "max": 4,
+        "colorClass": "bg-orange",
+        "textClass": "text-orange"
+      },
+      {
+        "id": 9,
+        "name": "Subject-Verb Agreement",
+        "max": 4,
+        "colorClass": "bg-cyan",
+        "textClass": "text-cyan"
+      },
+      {
+        "id": 10,
+        "name": "Compound Sentence",
+        "max": 4,
+        "colorClass": "bg-emerald",
+        "textClass": "text-emerald"
+      }
+    ]
+  },
+  "CEB1": {
+    "id": "CEB1",
+    "themeClass": "level-ceb1",
+    "totalExamPoints": 30,
+    "contentTitle": "Content and Paragraph Structure",
+    "grammarTitle": "Grammar for writing",
+    "contentPoints": 15,
+    "grammarPoints": 15,
+    "contentWeightPct": 50,
+    "grammarWeightPct": 50,
+    "content": [
+      {
+        "id": 1,
+        "name": "Paragraph Formatting",
+        "max": 2
+      },
+      {
+        "id": 2,
+        "name": "Topic Sentence",
+        "max": 3
+      },
+      {
+        "id": 3,
+        "name": "Supporting Sentences (Main Idea Sentences)",
+        "max": 3
+      },
+      {
+        "id": 4,
+        "name": "Supporting Sentences (Explanation)",
+        "max": 3
+      },
+      {
+        "id": 5,
+        "name": "Concluding sentences",
+        "max": 3
+      }
+    ],
+    "grammar": [
+      {
+        "id": 6,
+        "name": "Punctuation & Capitalization",
+        "max": 4,
+        "colorClass": "bg-purple",
+        "textClass": "text-purple"
+      },
+      {
+        "id": 7,
+        "name": "Transition Words",
+        "max": 4,
+        "colorClass": "bg-pink",
+        "textClass": "text-pink"
+      },
+      {
+        "id": 8,
+        "name": "Sentence Fragments",
+        "max": 4,
+        "colorClass": "bg-orange",
+        "textClass": "text-orange"
+      },
+      {
+        "id": 9,
+        "name": "Subject-Verb Agreement",
+        "max": 4,
+        "colorClass": "bg-cyan",
+        "textClass": "text-cyan"
+      },
+      {
+        "id": 10,
+        "name": "Compound Sentences",
+        "max": 4,
+        "colorClass": "bg-emerald",
+        "textClass": "text-emerald"
+      }
+    ]
+  },
+  "CEB2": {
+    "id": "CEB2",
+    "themeClass": "level-ceb2",
+    "totalExamPoints": 30,
+    "contentTitle": "Content and Paragraph Structure",
+    "grammarTitle": "Grammar for writing",
+    "contentPoints": 15,
+    "grammarPoints": 15,
+    "contentWeightPct": 50,
+    "grammarWeightPct": 50,
+    "content": [
+      {
+        "id": 1,
+        "name": "Paragraph Formatting",
+        "max": 2
+      },
+      {
+        "id": 2,
+        "name": "Topic Sentence",
+        "max": 3
+      },
+      {
+        "id": 3,
+        "name": "Supporting Sentences (Main Idea Sentences)",
+        "max": 3
+      },
+      {
+        "id": 4,
+        "name": "Supporting Sentences (Explanation)",
+        "max": 3
+      },
+      {
+        "id": 5,
+        "name": "Concluding sentences",
+        "max": 3
+      }
+    ],
+    "grammar": [
+      {
+        "id": 6,
+        "name": "Punctuation & Capitalization",
+        "max": 4,
+        "colorClass": "bg-purple",
+        "textClass": "text-purple"
+      },
+      {
+        "id": 7,
+        "name": "Transition Words",
+        "max": 4,
+        "colorClass": "bg-pink",
+        "textClass": "text-pink"
+      },
+      {
+        "id": 8,
+        "name": "Sentence Fragments",
+        "max": 4,
+        "colorClass": "bg-orange",
+        "textClass": "text-orange"
+      },
+      {
+        "id": 9,
+        "name": "Subject-Verb Agreement",
+        "max": 4,
+        "colorClass": "bg-cyan",
+        "textClass": "text-cyan"
+      },
+      {
+        "id": 10,
+        "name": "Compound Sentences",
+        "max": 4,
+        "colorClass": "bg-emerald",
+        "textClass": "text-emerald"
+      }
+    ]
+  }
+}
