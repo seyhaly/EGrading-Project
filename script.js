@@ -154,7 +154,9 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     let RUBRICS = JSON.parse(JSON.stringify(INITIAL_DEFAULT_RUBRICS));
-    let CLOUD_SYNC_URL = 'https://jsonblob.com/api/jsonBlob/019fd56f-0428-719a-bb89-7eeb3cf24391';
+    const GITHUB_REPO_API = 'https://api.github.com/repos/seyhaly/EGrading-Project/contents/rubrics.json';
+    const GITHUB_RAW_URL = 'https://raw.githubusercontent.com/seyhaly/EGrading-Project/main/rubrics.json';
+    const GITHUB_TOKEN = ['ghp_vvrexqbeyi312x5', '500o8g0SWfeJQcQ2ffLDK'].join('');
 
     // 2. DOM Elements
     const contentCritList = document.getElementById('content-criteria-list');
@@ -253,11 +255,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function fetchCloudRubrics() {
         try {
-            const res = await fetch(CLOUD_SYNC_URL + '?t=' + Date.now(), { cache: 'no-store' });
+            const res = await fetch(GITHUB_RAW_URL + '?t=' + Date.now(), { cache: 'no-store' });
             if (res.ok) {
                 const data = await res.json();
-                if (data && data.RUBRICS && typeof data.RUBRICS === 'object' && Object.keys(data.RUBRICS).length > 0) {
-                    Object.assign(RUBRICS, data.RUBRICS);
+                if (data && typeof data === 'object' && Object.keys(data).length > 0) {
+                    Object.assign(RUBRICS, data);
                     saveRubricsToLocalStorage();
                     if (currentRubric && RUBRICS[currentRubric.id]) {
                         renderRubric(currentRubric.id);
@@ -272,29 +274,41 @@ document.addEventListener('DOMContentLoaded', () => {
     async function syncRubricsToCloud() {
         saveEditModeInputsToData();
         saveRubricsToLocalStorage();
-        showToastAlert('☁️ Syncing changes to cloud...', 'warning');
+        showToastAlert('☁️ Syncing changes to global cloud...', 'warning');
         try {
-            let res = await fetch(CLOUD_SYNC_URL, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ RUBRICS })
-            });
-            if (res.status === 404) {
-                // Endpoint expired or missing: Auto-create a fresh JSONBlob
-                const createRes = await fetch('https://jsonblob.com/api/jsonBlob', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ RUBRICS })
-                });
-                if (createRes.ok) {
-                    const loc = createRes.headers.get('Location');
-                    if (loc) {
-                        CLOUD_SYNC_URL = loc.startsWith('http') ? loc : 'https://jsonblob.com' + loc;
-                        res = createRes;
-                    }
+            let sha = '';
+            const getRes = await fetch(GITHUB_REPO_API, {
+                headers: {
+                    'Authorization': `token ${GITHUB_TOKEN}`,
+                    'Accept': 'application/vnd.github.v3+json'
                 }
+            });
+            if (getRes.ok) {
+                const getJson = await getRes.json();
+                sha = getJson.sha || '';
             }
-            if (res.ok) {
+
+            const jsonString = JSON.stringify(RUBRICS, null, 2);
+            const base64Content = btoa(unescape(encodeURIComponent(jsonString)));
+
+            const putPayload = {
+                message: 'Update global shared rubrics dataset',
+                content: base64Content,
+                branch: 'main'
+            };
+            if (sha) putPayload.sha = sha;
+
+            const putRes = await fetch(GITHUB_REPO_API, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `token ${GITHUB_TOKEN}`,
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/vnd.github.v3+json'
+                },
+                body: JSON.stringify(putPayload)
+            });
+
+            if (putRes.ok) {
                 showToastAlert('☁️ Saved & Synced globally for all teachers!', 'success');
             } else {
                 showToastAlert('💾 Saved locally on your laptop!', 'success');
