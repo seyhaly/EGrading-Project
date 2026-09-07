@@ -156,7 +156,18 @@ document.addEventListener('DOMContentLoaded', () => {
     let RUBRICS = JSON.parse(JSON.stringify(INITIAL_DEFAULT_RUBRICS));
     const GITHUB_REPO_API = 'https://api.github.com/repos/seyhaly/EGrading-Project/contents/rubrics.json';
     const GITHUB_RAW_URL = 'https://raw.githubusercontent.com/seyhaly/EGrading-Project/main/rubrics.json';
-    const GITHUB_TOKEN = ['ghp_vvrexqbeyi312x5', '500o8g0SWfeJQcQ2ffLDK'].join('');
+
+    function getGitHubSyncToken() {
+        return localStorage.getItem('github_sync_token') || '';
+    }
+
+    function setGitHubSyncToken(token) {
+        if (token && token.trim()) {
+            localStorage.setItem('github_sync_token', token.trim());
+        } else {
+            localStorage.removeItem('github_sync_token');
+        }
+    }
 
     // 2. DOM Elements
     const contentCritList = document.getElementById('content-criteria-list');
@@ -175,6 +186,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const editToggleLabel = document.getElementById('edit-toggle-label');
     const editToolbar = document.getElementById('edit-toolbar');
     const saveSyncBtn = document.getElementById('save-sync-btn');
+    const cloudTokenBtn = document.getElementById('cloud-token-btn');
     const restoreDefaultBtn = document.getElementById('restore-default-btn');
     const editExamTotalPointsInput = document.getElementById('edit-exam-total-points');
     const editShowScore100Toggle = document.getElementById('edit-show-score-100');
@@ -255,39 +267,71 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function fetchCloudRubrics() {
         try {
-            // First fetch directly from GitHub REST API (bypasses raw CDN caching for instant real-time sync)
-            const res = await fetch(GITHUB_REPO_API + '?t=' + Date.now(), {
-                headers: {
-                    'Authorization': `token ${GITHUB_TOKEN}`,
-                    'Accept': 'application/vnd.github.v3+json'
-                },
-                cache: 'no-store'
-            });
-            if (res.ok) {
-                const getJson = await res.json();
-                if (getJson && getJson.content) {
-                    const decodedStr = decodeURIComponent(escape(atob(getJson.content.replace(/\s/g, ''))));
-                    const data = JSON.parse(decodedStr);
-                    if (data && typeof data === 'object' && Object.keys(data).length > 0) {
-                        Object.assign(RUBRICS, data);
-                        saveRubricsToLocalStorage();
-                        if (currentRubric && RUBRICS[currentRubric.id]) {
-                            renderRubric(currentRubric.id);
+            // 1. Fetch real-time live content directly from GitHub REST API
+            const token = getGitHubSyncToken();
+            const headers = {
+                'Accept': 'application/vnd.github.v3+json'
+            };
+            if (token) {
+                headers['Authorization'] = `token ${token}`;
+            }
+
+            let data = null;
+
+            try {
+                const res = await fetch(GITHUB_REPO_API + '?t=' + Date.now(), {
+                    headers: headers,
+                    cache: 'no-store'
+                });
+                if (res.ok) {
+                    const getJson = await res.json();
+                    if (getJson && getJson.content) {
+                        const decodedStr = decodeURIComponent(escape(atob(getJson.content.replace(/\s/g, ''))));
+                        data = JSON.parse(decodedStr);
+                    }
+                } else if (res.status === 401 && token) {
+                    // Token might be invalid, retry without Authorization header (public read)
+                    const publicRes = await fetch(GITHUB_REPO_API + '?t=' + Date.now(), {
+                        headers: { 'Accept': 'application/vnd.github.v3+json' },
+                        cache: 'no-store'
+                    });
+                    if (publicRes.ok) {
+                        const getJson = await publicRes.json();
+                        if (getJson && getJson.content) {
+                            const decodedStr = decodeURIComponent(escape(atob(getJson.content.replace(/\s/g, ''))));
+                            data = JSON.parse(decodedStr);
                         }
-                        return;
                     }
                 }
+            } catch (apiErr) {
+                console.warn('GitHub API fetch failed, trying fallback sources:', apiErr);
             }
-            // Fallback to Raw CDN URL
-            const rawRes = await fetch(GITHUB_RAW_URL + '?t=' + Date.now(), { cache: 'no-store' });
-            if (rawRes.ok) {
-                const data = await rawRes.json();
-                if (data && typeof data === 'object' && Object.keys(data).length > 0) {
-                    Object.assign(RUBRICS, data);
-                    saveRubricsToLocalStorage();
-                    if (currentRubric && RUBRICS[currentRubric.id]) {
-                        renderRubric(currentRubric.id);
+
+            // 2. Fallback: local rubrics.json file (same-origin / local server / offline)
+            if (!data || typeof data !== 'object' || Object.keys(data).length === 0) {
+                try {
+                    const localRes = await fetch('rubrics.json?t=' + Date.now(), { cache: 'no-store' });
+                    if (localRes.ok) {
+                        data = await localRes.json();
                     }
+                } catch (localErr) {}
+            }
+
+            // 3. Fallback: Raw CDN URL
+            if (!data || typeof data !== 'object' || Object.keys(data).length === 0) {
+                try {
+                    const rawRes = await fetch(GITHUB_RAW_URL + '?t=' + Date.now(), { cache: 'no-store' });
+                    if (rawRes.ok) {
+                        data = await rawRes.json();
+                    }
+                } catch (rawErr) {}
+            }
+
+            if (data && typeof data === 'object' && Object.keys(data).length > 0) {
+                Object.assign(RUBRICS, data);
+                saveRubricsToLocalStorage();
+                if (currentRubric && RUBRICS[currentRubric.id]) {
+                    renderRubric(currentRubric.id);
                 }
             }
         } catch (e) {
@@ -298,15 +342,37 @@ document.addEventListener('DOMContentLoaded', () => {
     async function syncRubricsToCloud() {
         saveEditModeInputsToData();
         saveRubricsToLocalStorage();
+
+        let token = getGitHubSyncToken();
+        if (!token) {
+            const configured = await showCloudTokenModal();
+            token = getGitHubSyncToken();
+            if (!token) {
+                showToastAlert('💾 Saved locally! (Enter a GitHub token in Cloud Settings to sync globally)', 'info');
+                isEditMode = false;
+                renderRubric(levelSelect.value);
+                return;
+            }
+        }
+
         showToastAlert('☁️ Syncing changes to global cloud...', 'warning');
         try {
             let sha = '';
             const getRes = await fetch(GITHUB_REPO_API, {
                 headers: {
-                    'Authorization': `token ${GITHUB_TOKEN}`,
+                    'Authorization': `token ${token}`,
                     'Accept': 'application/vnd.github.v3+json'
                 }
             });
+
+            if (getRes.status === 401 || getRes.status === 403) {
+                showToastAlert('⚠️ GitHub Token rejected (401/403). Please verify your token permissions.', 'warning');
+                await showCloudTokenModal();
+                isEditMode = false;
+                renderRubric(levelSelect.value);
+                return;
+            }
+
             if (getRes.ok) {
                 const getJson = await getRes.json();
                 sha = getJson.sha || '';
@@ -325,7 +391,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const putRes = await fetch(GITHUB_REPO_API, {
                 method: 'PUT',
                 headers: {
-                    'Authorization': `token ${GITHUB_TOKEN}`,
+                    'Authorization': `token ${token}`,
                     'Content-Type': 'application/json',
                     'Accept': 'application/vnd.github.v3+json'
                 },
@@ -335,9 +401,12 @@ document.addEventListener('DOMContentLoaded', () => {
             if (putRes.ok) {
                 showToastAlert('☁️ Saved & Synced globally for all teachers!', 'success');
             } else {
-                showToastAlert('💾 Saved locally on your laptop!', 'success');
+                const errData = await putRes.json().catch(() => ({}));
+                console.error('Cloud sync PUT failed:', errData);
+                showToastAlert(`⚠️ Cloud sync failed (${putRes.status}). Saved locally!`, 'warning');
             }
         } catch (e) {
+            console.error('Cloud sync offline error:', e);
             showToastAlert('💾 Saved locally! (Cloud sync offline)', 'success');
         }
         isEditMode = false;
@@ -840,6 +909,101 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    function showCloudTokenModal() {
+        return new Promise((resolve) => {
+            let modalOverlay = document.getElementById('custom-token-modal');
+            if (!modalOverlay) {
+                modalOverlay = document.createElement('div');
+                modalOverlay.id = 'custom-token-modal';
+                modalOverlay.className = 'custom-modal-overlay';
+                document.body.appendChild(modalOverlay);
+            }
+
+            const currentToken = getGitHubSyncToken();
+            const hasExisting = Boolean(currentToken);
+
+            modalOverlay.innerHTML = `
+                <div class="custom-modal-card" style="max-width: 480px;">
+                    <div class="custom-modal-header">
+                        <div class="custom-modal-icon">☁️</div>
+                        <h3>GitHub Cloud Sync</h3>
+                    </div>
+                    <div class="custom-modal-body">
+                        <p style="margin-bottom: 0.75rem; line-height: 1.5; font-size: 0.9rem; color: var(--text-main);">
+                            Reading from the cloud is <strong>always free & real-time</strong> for all teachers.
+                            To <strong>save and publish</strong> rubric changes to GitHub, enter your personal GitHub token.
+                        </p>
+                        <p style="margin-bottom: 0.5rem; font-size: 0.8rem; color: var(--text-muted);">
+                            🔒 Stored safely in your browser only (never committed to GitHub).
+                        </p>
+                        <div style="margin: 0.85rem 0;">
+                            <label style="font-size: 0.8rem; font-weight: 700; color: var(--text-main); display: block; margin-bottom: 0.35rem;">GitHub Personal Access Token:</label>
+                            <input type="password" id="cloud-token-input" placeholder="ghp_... or github_pat_..." value="${currentToken}" style="width: 100%; box-sizing: border-box; padding: 0.65rem 0.85rem; border-radius: 10px; border: 1px solid var(--border); background: var(--bg-main); color: var(--text-main); font-family: monospace; font-size: 0.875rem; outline: none;">
+                            <label style="display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.75rem; color: var(--text-muted); margin-top: 0.4rem; cursor: pointer;">
+                                <input type="checkbox" id="show-token-checkbox"> Show token
+                            </label>
+                        </div>
+                        <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1.25rem;">
+                            Need a token? <a href="https://github.com/settings/tokens/new?scopes=repo&description=EGrading-Cloud-Sync" target="_blank" rel="noopener" style="color: var(--primary); font-weight: 700; text-decoration: underline;">Generate Classic Token with 'repo' scope ↗</a>
+                        </div>
+                    </div>
+                    <div class="custom-modal-footer" style="display: flex; gap: 0.5rem; justify-content: flex-end;">
+                        ${hasExisting ? '<button class="btn btn-secondary modal-clear-token-btn" style="color: #EF4444;">Remove Token</button>' : ''}
+                        <button class="btn btn-secondary modal-cancel-token-btn">Cancel</button>
+                        <button class="btn btn-primary modal-save-token-btn" style="background: var(--primary); color: white;">Save Token</button>
+                    </div>
+                </div>
+            `;
+
+            requestAnimationFrame(() => {
+                modalOverlay.classList.add('show');
+            });
+
+            const tokenInput = modalOverlay.querySelector('#cloud-token-input');
+            const showTokenCheck = modalOverlay.querySelector('#show-token-checkbox');
+            const saveBtn = modalOverlay.querySelector('.modal-save-token-btn');
+            const cancelBtn = modalOverlay.querySelector('.modal-cancel-token-btn');
+            const clearBtn = modalOverlay.querySelector('.modal-clear-token-btn');
+
+            if (showTokenCheck && tokenInput) {
+                showTokenCheck.addEventListener('change', () => {
+                    tokenInput.type = showTokenCheck.checked ? 'text' : 'password';
+                });
+            }
+
+            const closeModal = (saved) => {
+                modalOverlay.classList.remove('show');
+                setTimeout(() => {
+                    if (modalOverlay.parentNode) modalOverlay.parentNode.removeChild(modalOverlay);
+                }, 300);
+                resolve(saved);
+            };
+
+            cancelBtn.onclick = () => closeModal(false);
+            if (clearBtn) {
+                clearBtn.onclick = () => {
+                    setGitHubSyncToken('');
+                    showToastAlert('🗑️ GitHub Cloud Token removed from this browser.', 'info');
+                    closeModal(true);
+                };
+            }
+            saveBtn.onclick = () => {
+                const val = tokenInput.value.trim();
+                if (val) {
+                    setGitHubSyncToken(val);
+                    showToastAlert('🔑 GitHub Cloud Token saved in your browser!', 'success');
+                    closeModal(true);
+                } else {
+                    setGitHubSyncToken('');
+                    closeModal(false);
+                }
+            };
+            modalOverlay.onclick = (e) => {
+                if (e.target === modalOverlay) closeModal(false);
+            };
+        });
+    }
+
     async function performRestoreDefaults() {
         if (!currentRubric) return;
         const activeLevel = currentRubric.id;
@@ -861,6 +1025,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    if (cloudTokenBtn) cloudTokenBtn.addEventListener('click', () => showCloudTokenModal());
     if (restoreDefaultBtn) restoreDefaultBtn.addEventListener('click', performRestoreDefaults);
     if (restoreDefaultMainBtn) restoreDefaultMainBtn.addEventListener('click', performRestoreDefaults);
     themeToggleBtn.addEventListener('click', () => {
