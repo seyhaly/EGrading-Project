@@ -303,11 +303,11 @@
   "CEB1": {
     "id": "CEB1",
     "themeClass": "level-ceb1",
-    "totalExamPoints": 30,
+    "totalExamPoints": 100,
     "contentTitle": "Content and Paragraph Structure",
     "grammarTitle": "Grammar for writing",
-    "contentPoints": 15,
-    "grammarPoints": 15,
+    "contentPoints": 50,
+    "grammarPoints": 50,
     "contentWeightPct": 50,
     "grammarWeightPct": 50,
     "content": [
@@ -373,7 +373,8 @@
         "colorClass": "bg-emerald",
         "textClass": "text-emerald"
       }
-    ]
+    ],
+    "showScore100": false
   },
   "CEB2": {
     "id": "CEB2",
