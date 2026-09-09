@@ -242,57 +242,64 @@
       },
       {
         "id": 2,
+        "name": "Organization",
+        "max": 2
+      },
+      {
+        "id": 3,
         "name": "Topic Sentence",
         "max": 3
       },
       {
-        "id": 3,
+        "id": 4,
         "name": "Supporting Sentences (Main Idea Sentence)",
         "max": 3
       },
       {
-        "id": 4,
+        "id": 5,
         "name": "Supporting Sentences (Explanation)",
         "max": 3
       },
       {
-        "id": 5,
+        "id": 6,
         "name": "Concluding sentence",
-        "max": 3
+        "max": 3,
+        "colorClass": "special-green",
+        "textClass": ""
       }
     ],
     "grammar": [
       {
-        "id": 6,
+        "id": 7,
         "name": "Punctuation & Capitalization",
         "max": 4,
         "colorClass": "bg-purple",
         "textClass": "text-purple"
       },
       {
-        "id": 7,
+        "id": 8,
         "name": "Transition Words",
         "max": 4,
         "colorClass": "bg-pink",
         "textClass": "text-pink"
       },
       {
-        "id": 8,
+        "id": 9,
         "name": "Sentence Fragments",
         "max": 4,
         "colorClass": "bg-orange",
         "textClass": "text-orange"
       },
       {
-        "id": 9,
+        "id": 10,
         "name": "Subject-Verb Agreement",
         "max": 4,
         "colorClass": "bg-cyan",
         "textClass": "text-cyan"
       },
       {
-        "id": 10,
-        "name": "Compound Sentence",
+        "id": 11,
+        "name": "First Conditional",
         "max": 4,
         "colorClass": "bg-emerald",
         "textClass": "text-emerald"
