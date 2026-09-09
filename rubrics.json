@@ -306,10 +306,10 @@
     "totalExamPoints": 100,
     "contentTitle": "Content and Paragraph Structure",
     "grammarTitle": "Grammar for writing",
-    "contentPoints": 50,
-    "grammarPoints": 50,
-    "contentWeightPct": 50,
-    "grammarWeightPct": 50,
+    "contentPoints": 60,
+    "grammarPoints": 40,
+    "contentWeightPct": 60,
+    "grammarWeightPct": 40,
     "content": [
       {
         "id": 1,
@@ -354,7 +354,7 @@
       },
       {
         "id": 8,
-        "name": "Sentence Fragments",
+        "name": "Sentence Errors",
         "max": 4,
         "colorClass": "bg-orange",
         "textClass": "text-orange"
@@ -368,7 +368,7 @@
       },
       {
         "id": 10,
-        "name": "Compound Sentences",
+        "name": "First Conditional",
         "max": 4,
         "colorClass": "bg-emerald",
         "textClass": "text-emerald"
