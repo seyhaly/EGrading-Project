@@ -354,21 +354,21 @@
       },
       {
         "id": 8,
-        "name": "Sentence Errors",
+        "name": "First Conditionals",
         "max": 4,
         "colorClass": "bg-orange",
         "textClass": "text-orange"
       },
       {
         "id": 9,
-        "name": "Subject-Verb Agreement",
+        "name": "Sentence Errors",
         "max": 4,
         "colorClass": "bg-cyan",
         "textClass": "text-cyan"
       },
       {
         "id": 10,
-        "name": "First Conditional",
+        "name": "Subject-verb Agreement",
         "max": 4,
         "colorClass": "bg-emerald",
         "textClass": "text-emerald"
