@@ -389,10 +389,10 @@
     "totalExamPoints": 100,
     "contentTitle": "Content and Paragraph Structure",
     "grammarTitle": "Grammar for writing",
-    "contentPoints": 50,
-    "grammarPoints": 50,
-    "contentWeightPct": 50,
-    "grammarWeightPct": 50,
+    "contentPoints": 60,
+    "grammarPoints": 40,
+    "contentWeightPct": 60,
+    "grammarWeightPct": 40,
     "content": [
       {
         "id": 1,
@@ -401,57 +401,64 @@
       },
       {
         "id": 2,
+        "name": "Organization",
+        "max": 2
+      },
+      {
+        "id": 3,
         "name": "Topic Sentence",
         "max": 3
       },
       {
-        "id": 3,
+        "id": 4,
         "name": "Supporting Sentences (Main Idea Sentences)",
         "max": 3
       },
       {
-        "id": 4,
+        "id": 5,
         "name": "Supporting Sentences (Explanation)",
         "max": 3
       },
       {
-        "id": 5,
+        "id": 6,
         "name": "Concluding sentences",
-        "max": 3
+        "max": 3,
+        "colorClass": "special-green",
+        "textClass": ""
       }
     ],
     "grammar": [
       {
-        "id": 6,
+        "id": 7,
         "name": "Punctuation & Capitalization",
         "max": 4,
         "colorClass": "bg-purple",
         "textClass": "text-purple"
       },
       {
-        "id": 7,
-        "name": "Transition Words",
+        "id": 8,
+        "name": "Cause-and-effect Transition Words",
         "max": 4,
         "colorClass": "bg-pink",
         "textClass": "text-pink"
       },
       {
-        "id": 8,
-        "name": "Sentence Fragments",
+        "id": 9,
+        "name": "B2 Grammar for Writing",
         "max": 4,
         "colorClass": "bg-orange",
         "textClass": "text-orange"
       },
       {
-        "id": 9,
+        "id": 10,
         "name": "Subject-Verb Agreement",
         "max": 4,
         "colorClass": "bg-cyan",
         "textClass": "text-cyan"
       },
       {
-        "id": 10,
-        "name": "Compound Sentences",
+        "id": 11,
+        "name": "Passive Sentences",
         "max": 4,
         "colorClass": "bg-emerald",
         "textClass": "text-emerald"
