@@ -156,10 +156,10 @@
     "totalExamPoints": 30,
     "contentTitle": "Content and Paragraph Structure",
     "grammarTitle": "Grammar for writing",
-    "contentPoints": 15,
-    "grammarPoints": 15,
-    "contentWeightPct": 50,
-    "grammarWeightPct": 50,
+    "contentPoints": 18,
+    "grammarPoints": 12,
+    "contentWeightPct": 60,
+    "grammarWeightPct": 40,
     "content": [
       {
         "id": 1,
@@ -218,12 +218,13 @@
       },
       {
         "id": 10,
-        "name": "Compound Sentences",
+        "name": "Complex Sentences",
         "max": 4,
         "colorClass": "bg-emerald",
         "textClass": "text-emerald"
       }
-    ]
+    ],
+    "showScore100": false
   },
   "CEA2": {
     "id": "CEA2",
