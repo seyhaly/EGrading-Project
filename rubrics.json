@@ -2,11 +2,11 @@
   "ECA1": {
     "id": "ECA1",
     "themeClass": "level-eca1",
-    "totalExamPoints": 30,
+    "totalExamPoints": 50,
     "contentTitle": "Content and Paragraph Structure",
     "grammarTitle": "Grammar for writing",
-    "contentPoints": 18,
-    "grammarPoints": 12,
+    "contentPoints": 30,
+    "grammarPoints": 20,
     "contentWeightPct": 60,
     "grammarWeightPct": 40,
     "content": [
@@ -72,7 +72,8 @@
         "colorClass": "bg-emerald",
         "textClass": "text-emerald"
       }
-    ]
+    ],
+    "showScore100": false
   },
   "ECA2": {
     "id": "ECA2",
