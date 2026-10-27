@@ -2,11 +2,11 @@
   "ECA1": {
     "id": "ECA1",
     "themeClass": "level-eca1",
-    "totalExamPoints": 50,
+    "totalExamPoints": 30,
     "contentTitle": "Content and Paragraph Structure",
     "grammarTitle": "Grammar for writing",
-    "contentPoints": 30,
-    "grammarPoints": 20,
+    "contentPoints": 18,
+    "grammarPoints": 12,
     "contentWeightPct": 60,
     "grammarWeightPct": 40,
     "content": [
@@ -67,7 +67,7 @@
       },
       {
         "id": 10,
-        "name": "Compound Sentence",
+        "name": "Sentence Variety",
         "max": 4,
         "colorClass": "bg-emerald",
         "textClass": "text-emerald"
