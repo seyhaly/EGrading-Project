@@ -313,11 +313,11 @@
   "CEB1": {
     "id": "CEB1",
     "themeClass": "level-ceb1",
-    "totalExamPoints": 100,
+    "totalExamPoints": 60,
     "contentTitle": "Content and Paragraph Structure",
     "grammarTitle": "Grammar for writing",
-    "contentPoints": 60,
-    "grammarPoints": 40,
+    "contentPoints": 36,
+    "grammarPoints": 24,
     "contentWeightPct": 60,
     "grammarWeightPct": 40,
     "content": [
